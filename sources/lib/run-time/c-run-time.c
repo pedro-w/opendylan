@@ -431,7 +431,7 @@ dylan_value  VECTOR_REF_OR_F(dylan_value vector, int offset) {
   }
 }
 
-INLINE dylan_value  vector_ref_setter (dylan_value new_value, dylan_simple_object_vector* vector, int offset) {
+static dylan_value  vector_ref_setter (dylan_value new_value, dylan_simple_object_vector* vector, int offset) {
   return(vector_data(vector)[offset] = new_value);
 }
 
@@ -500,7 +500,7 @@ dylan_value primitive_raw_as_vector (dylan_value size, dylan_value buffer) {
   dylan_value _stk_##_name[_size + VECTOR_HEADER_SIZE]; \
   dylan_simple_object_vector* _name = (init_stack_vector((dylan_simple_object_vector*)(&_stk_##_name), (_size)))
 
-INLINE dylan_simple_object_vector* init_stack_vector(dylan_simple_object_vector* vector, int size) {
+static dylan_simple_object_vector* init_stack_vector(dylan_simple_object_vector* vector, int size) {
   vector->class = (dylan_value)&KLsimple_object_vectorGVKdW;
   vector_size_setter(size, vector);
   return(vector);
@@ -730,7 +730,7 @@ FORCE_INLINE void TYPE_CHECK_ARG (dylan_value specializer, dylan_value argument)
   PERFORM_INLINE_TYPE_CHECK(argument, specializer);
 }
 
-INLINE void TYPE_CHECK_ARGS(dylan_value function, int argument_count, dylan_value* arguments) {
+static void TYPE_CHECK_ARGS(dylan_value function, int argument_count, dylan_value* arguments) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)function);
   if (specs) {
     dylan_value* specializers = vector_data(specs);
@@ -741,7 +741,7 @@ INLINE void TYPE_CHECK_ARGS(dylan_value function, int argument_count, dylan_valu
   }
 }
 
-INLINE void TYPE_CHECK_ARGS_1(dylan_value fn, dylan_value a1) {
+static void TYPE_CHECK_ARGS_1(dylan_value fn, dylan_value a1) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)fn);
   if (specs) {
     dylan_value* specializers = vector_data(specs);
@@ -749,7 +749,7 @@ INLINE void TYPE_CHECK_ARGS_1(dylan_value fn, dylan_value a1) {
   }
 }
 
-INLINE void TYPE_CHECK_ARGS_2(dylan_value fn, dylan_value a1, dylan_value a2) {
+static void TYPE_CHECK_ARGS_2(dylan_value fn, dylan_value a1, dylan_value a2) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)fn);
   if (specs) {
     dylan_value* specializers = vector_data(specs);
@@ -758,7 +758,7 @@ INLINE void TYPE_CHECK_ARGS_2(dylan_value fn, dylan_value a1, dylan_value a2) {
   }
 }
 
-INLINE void TYPE_CHECK_ARGS_3(dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3) {
+static void TYPE_CHECK_ARGS_3(dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)fn);
   if (specs) {
     dylan_value* specializers = vector_data(specs);
@@ -768,7 +768,7 @@ INLINE void TYPE_CHECK_ARGS_3(dylan_value fn, dylan_value a1, dylan_value a2, dy
   }
 }
 
-INLINE void TYPE_CHECK_ARGS_4(dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3, dylan_value a4) {
+static void TYPE_CHECK_ARGS_4(dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3, dylan_value a4) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)fn);
   if (specs) {
     dylan_value* specializers = vector_data(specs);
@@ -779,7 +779,7 @@ INLINE void TYPE_CHECK_ARGS_4(dylan_value fn, dylan_value a1, dylan_value a2, dy
   }
 }
 
-INLINE void TYPE_CHECK_ARGS_5(dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3, dylan_value a4, dylan_value a5) {
+static void TYPE_CHECK_ARGS_5(dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3, dylan_value a4, dylan_value a5) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)fn);
   if (specs) {
     dylan_value* specializers = vector_data(specs);
@@ -791,7 +791,7 @@ INLINE void TYPE_CHECK_ARGS_5(dylan_value fn, dylan_value a1, dylan_value a2, dy
   }
 }
 
-INLINE void TYPE_CHECK_ARGS_6 (dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3, dylan_value a4, dylan_value a5, dylan_value a6) {
+static void TYPE_CHECK_ARGS_6 (dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3, dylan_value a4, dylan_value a5, dylan_value a6) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)fn);
   if (specs) {
     dylan_value* specializers = vector_data(specs);
@@ -804,7 +804,7 @@ INLINE void TYPE_CHECK_ARGS_6 (dylan_value fn, dylan_value a1, dylan_value a2, d
   }
 }
 
-INLINE void TYPE_CHECK_ARGS_7
+static void TYPE_CHECK_ARGS_7
     (dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3, dylan_value a4, dylan_value a5, dylan_value a6, dylan_value a7) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)fn);
   if (specs) {
@@ -819,7 +819,7 @@ INLINE void TYPE_CHECK_ARGS_7
   }
 }
 
-INLINE void TYPE_CHECK_ARGS_8
+static void TYPE_CHECK_ARGS_8
     (dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3, dylan_value a4, dylan_value a5, dylan_value a6, dylan_value a7, dylan_value a8) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)fn);
   if (specs) {
@@ -835,7 +835,7 @@ INLINE void TYPE_CHECK_ARGS_8
   }
 }
 
-INLINE void TYPE_CHECK_ARGS_9
+static void TYPE_CHECK_ARGS_9
     (dylan_value fn, dylan_value a1, dylan_value a2, dylan_value a3, dylan_value a4, dylan_value a5, dylan_value a6, dylan_value a7, dylan_value a8, dylan_value a9) {
   dylan_simple_object_vector* specs = function_specializers((dylan_simple_method*)fn);
   if (specs) {
@@ -862,7 +862,7 @@ INLINE void BASIC_REQUIRED_CALL_CHECK
   }
 }
 
-INLINE void REQUIRED_CALL_CHECK
+static void REQUIRED_CALL_CHECK
     (dylan_simple_method* function, int number_required, int argument_count, dylan_value* arguments) {
   BASIC_REQUIRED_CALL_CHECK(function, number_required, argument_count);
   TYPE_CHECK_ARGS(function, argument_count, arguments);
@@ -876,7 +876,7 @@ INLINE void BASIC_OPTIONAL_CALL_CHECK
   }
 }
 
-INLINE void OPTIONAL_CALL_CHECK
+static void OPTIONAL_CALL_CHECK
     (dylan_simple_method* function, int number_required, int argument_count, dylan_value* arguments) {
   BASIC_OPTIONAL_CALL_CHECK(function, number_required, argument_count);
   TYPE_CHECK_ARGS(function, number_required, arguments);
@@ -884,7 +884,7 @@ INLINE void OPTIONAL_CALL_CHECK
 
 extern dylan_value Kodd_keyword_arguments_errorVKiI(dylan_value function, dylan_value argc);
 
-INLINE void KEYWORD_CALL_CHECK
+static void KEYWORD_CALL_CHECK
     (dylan_simple_method* function, int number_required, int argument_count, dylan_value* arguments) {
   OPTIONAL_CALL_CHECK (function, number_required, argument_count, arguments);
   if (unlikely((argument_count - number_required) & 1)) {
@@ -1430,7 +1430,7 @@ INLINE void process_keyword_parameters_into_with_checking
   }
 }
 
-INLINE int process_keyword_call_into
+static int process_keyword_call_into
     (dylan_value* new_arguments, dylan_simple_method* function, int argument_count,
      int number_required, dylan_value* required_arguments,
      int optionals_count, dylan_value* optional_arguments, dylan_simple_object_vector* rest_arguments) {
@@ -1453,7 +1453,7 @@ INLINE int process_keyword_call_into
 /* TODO: Turn this back into stack allocation. This was a function
          returning stack allocated data! */
 
-INLINE int process_keyword_call_and_restify_into
+static int process_keyword_call_and_restify_into
     (dylan_value* new_arguments, dylan_simple_method* function,
      int argument_count, dylan_value* arguments, dylan_simple_object_vector* rest_arguments) {
   int number_required = function_number_required(function);
@@ -1468,7 +1468,7 @@ INLINE int process_keyword_call_and_restify_into
            &arguments[number_required], rest_arguments));
 }
 
-INLINE dylan_value* process_keyword_call
+static dylan_value* process_keyword_call
     (dylan_simple_method* function, int argument_count, dylan_value* arguments, dylan_value rest_arguments) {
   TEB* teb = get_teb();
   process_keyword_call_and_restify_into
@@ -1476,7 +1476,7 @@ INLINE dylan_value* process_keyword_call
   return(teb->new_arguments);
 }
 
-INLINE dylan_value* process_keyword_call_and_n
+static dylan_value* process_keyword_call_and_n
     (dylan_simple_method* function, int argument_count,
      dylan_value* arguments, dylan_value rest_arguments, int *new_argument_count) {
   TEB* teb = get_teb();
@@ -3304,7 +3304,7 @@ dylan_value primitive_initialize_discriminator(dylan_value discriminator) {
 DMINT _unused_arg = 0;
 DMINT* P_unused_arg = &_unused_arg;
 
-INLINE dylan_value MV_SPILL_into (dylan_value first_value, MV *dest) {
+static dylan_value MV_SPILL_into (dylan_value first_value, MV *dest) {
   TEB* teb = get_teb();
   int i, n = teb->return_values.count;
   teb->return_values.value[0] = first_value;
@@ -3513,7 +3513,7 @@ dylan_value SET_KEYWORD_METHOD_SIG (dylan_value method, dylan_value sig) {
 
 /* PRIMITIVES */
 
-INLINE dylan_value primitive_apply_using_buffer (dylan_simple_method* fn, int n, dylan_value a[]) {
+static dylan_value primitive_apply_using_buffer (dylan_simple_method* fn, int n, dylan_value a[]) {
   TEB* teb = get_teb();
   int i, j;
   dylan_simple_object_vector* optionals = (dylan_simple_object_vector*)a[n - 1];
