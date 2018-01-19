@@ -86,7 +86,7 @@ define custom &machine-word-primitive primitive-cast-raw-as-integer
     (x :: <raw-machine-word>) => (result :: <integer>)
   // Signals an error if the result is too big to be an <integer> ...
   let x :: <abstract-integer> = extract-mw-operand-unsigned(x);
-  as(<integer>, generic/lsh(x, -2))
+  as(<integer>, generic/ash(x, -2))
 end;
 
 define custom &machine-word-primitive primitive-wrap-abstract-integer
