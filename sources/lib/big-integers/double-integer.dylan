@@ -30,7 +30,7 @@ define inline-only function sign-word (x :: <machine-word>) => (sign :: <machine
 end function sign-word;
 
 define inline-only function interpret-result-as-abstract-integer
-    (low :: <machine-word>, high :: <machine-word>) => (value :: <integer>)
+    (low :: <machine-word>, high :: <machine-word>) => (value :: <abstract-integer>)
   if (double-integer-is-integer?(low, high))
     coerce-machine-word-to-integer(low)
   else
