@@ -168,10 +168,13 @@ define function subst-engine-node-1 (new-e, old-e, ds :: <dispatch-state>) => ()
       for (i :: <integer> from 0 below size(vec))
         engine-node-subster(new-e, old-e, vector-element(vec, i))
       end for;
-      for (e :: <cache-header-engine-node> in gf-cache-info-users(cache))
-        if (pointer-id?(cache-header-engine-node-next(e), old-e))
-          cache-header-engine-node-next(e) := new-e
-        end if
+      for (e in gf-cache-info-users(cache))
+	if (e)
+	  let e :: <cache-header-engine-node> = e;
+	  if (pointer-id?(cache-header-engine-node-next(e), old-e))
+	    cache-header-engine-node-next(e) := new-e
+	  end if
+	end if;
       end for;
     <gf-cache-info> =>
       // By default, walk/replace in all the cache header users of the g.f.
