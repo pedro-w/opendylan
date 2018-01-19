@@ -5,11 +5,33 @@ Copyright:    Dylan Hackers 2014
 License:      See License.txt in this distribution for details.
 Warranty:     Distributed WITHOUT WARRANTY OF ANY KIND
 
+define function ztrace(x)
+  format-err("TR:%=\n", x);
+  x
+end function;
+define function zout(x)
+  local
+    method safe(x :: <character>) => (xd :: <character>)
+      select (x)
+	'\\' => '/';
+	'\"' => '\'';
+	otherwise => x;
+      end;
+    end;
+  select (x by instance?)
+    <integer> => x;
+    <symbol> => x;
+    <collection> => x;
+    <string> => format-to-string("\"%s\"", map(safe, x));
+    otherwise => zout(format-to-string("%=", x));
+  end;
+end;
+
 //callback function called for trace events:
 // (key-value-pairs :: <plist> => ()
-define variable *trace-dfm-callback* :: false-or(<function>) = #f;
+define variable *trace-dfm-callback* :: false-or(<function>) = ztrace;
 //outputter function called on control and data flow node
-define variable *trace-dfm-outputter* :: false-or(<function>) = #f;
+define variable *trace-dfm-outputter* :: false-or(<function>) = zout;
 //method uniquifier.. - use dfmc-debug-back-end and:
 // compose(print-specializers, signature-spec)
 define variable *trace-dfm-method-printer* :: false-or(<function>) = #f;
@@ -140,7 +162,7 @@ define function safe-name (x :: <&lambda>) => (res :: <symbol>)
     end
   else
     *lambda-string-table*[debug-name] := list(x);
-    as(<symbol>, output(debug-string))
+    debug-name
   end;
 end;
 
@@ -226,7 +248,7 @@ define inline function trace-dfm-nodes
     let props = cs[0].environment.lambda.source-properties;
     let ids = map(node-id, cs);
     let data = list(type:, key,
-                    nodeids:, ids);
+                    nodeids:, as(<list>, ids));
     trace(data, props);
   end;
 end;
@@ -360,10 +382,10 @@ define method remove-user! (t :: <temporary>, c :: <computation>)
 end;
 
 define method add-user! (t :: <temporary>, c :: <computation>)
+  next-method();
   if (t.environment ~== c.environment)
     trace-dfm-node(#"new-temporary", t, t);
   end;
-  next-method();
   trace-dfm-connection(#"add-temporary-user", t, c);
 end;
 
