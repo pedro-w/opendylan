@@ -24,6 +24,9 @@ define function byte-vector-ref-setter
   element(byte-vector, index) := value;
 end function byte-vector-ref-setter;
 
+define generic byte-vector-fill
+  (target :: <byte-vector>, value,
+   #key start, end: last) => ();
 
 define sealed method byte-vector-fill
     (target :: <byte-vector>, value :: <integer>,
