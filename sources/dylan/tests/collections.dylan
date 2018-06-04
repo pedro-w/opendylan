@@ -94,23 +94,26 @@ define method test-collection-of-size
 end method test-collection-of-size;
 
 define method test-limited-collection-of-size
-    (name :: <string>, class :: <class>, collection-size :: <integer>) => ()
-  let collections = #[];
-  let name = format-to-string("Limited %s", name);
-  check(format-to-string("%s creation", name),
-        always(#t),
-        collections := make-limited-collections-of-size(class, collection-size));
-  for (collection in collections)
-    let individual-name
-      = format-to-string("%s of %s", name, element-type(collection));
-    check-equal(format-to-string("%s empty?", individual-name),
-                empty?(collection), collection-size == 0);
-    check-equal(format-to-string("%s size", individual-name),
-                size(collection), collection-size);
-    check-equal(format-to-string("%s = shallow-copy", individual-name),
-                shallow-copy(collection), collection);
-    test-collection(individual-name, collection)
-  end
+  (name :: <string>, class :: <class>, collection-size :: <integer>) => ()
+  for (fill in #[#f, 102, #["f"], 'f'])
+    let collections = #[];
+    let name = format-to-string("Limited %s", name);
+    check-no-errors(format-to-string("%s creation", name),
+                   begin
+                     collections := make-limited-collections-of-size(class, collection-size, fill: fill);
+                   end);
+    for (collection in collections)
+      let individual-name
+        = format-to-string("%s of %s", name, element-type(collection));
+      check-equal(format-to-string("%s empty?", individual-name),
+                  empty?(collection), collection-size == 0);
+      check-equal(format-to-string("%s size", individual-name),
+                  size(collection), collection-size);
+      check-equal(format-to-string("%s = shallow-copy", individual-name),
+                  shallow-copy(collection), collection);
+      test-collection(individual-name, collection, fill: fill)
+    end
+  end for;
 end method test-limited-collection-of-size;
 
 
@@ -144,34 +147,29 @@ define method make-collections-of-size
  => (collections :: <sequence>)
   let sequences = make(<stretchy-vector>);
   let element-type = collection-type-element-type(class);
-  if (subtype?(<integer>, element-type))
-    add!(sequences, as(class, range(from: 1, to: collection-size)))
-  end;
-  if (subtype?(<character>, element-type))
-    add!(sequences,
-         if (collection-size < size($default-string))
-           as(class, copy-sequence($default-string, end: collection-size));
-         else
-           as(class, make(<vector>, size: collection-size, fill: 'a'));
-         end)
-  end;
-  // Only return one for size 0, because they are all the same
-  if (collection-size = 0)
-    vector(sequences[0])
-  else
-    sequences
-  end
+  
+  let ref = make(<reference-sequence>,
+                 size: collection-size,
+                 generator: generator-of(element-type));
+  vector(as(class, ref))
 end method make-collections-of-size;
+
+define method make-collections-of-size
+  (class :: subclass(<range>), collection-size :: <integer>)
+  => (ranges :: <sequence>)
+  vector(make(<range>, from: 0, below: collection-size))
+end method;
 
 define method make-collections-of-size
     (class :: subclass(<table>), collection-size :: <integer>)
  => (tables :: <sequence>)
   let table-1 = make(<table>);
   let table-2 = make(<table>);
-  for (i from 0 below collection-size,
-       char in $default-string)
-    table-1[i] := i + 1;
-    table-2[i] := char;
+  let gen-1 = generator-of(<integer>);
+  let gen-2 = generator-of(<character>);
+  for (i from 0 below collection-size)
+    table-1[i] := gen-1(i);
+    table-2[i] := gen-2(i);
   end;
   vector(table-1, table-2)
 end method make-collections-of-size;
@@ -193,90 +191,77 @@ define method make-collections-of-size
 end method make-collections-of-size;
 
 define method make-limited-collections-of-size
-    (class :: <class>, collection-size :: <integer>)
+    (class :: <class>, collection-size :: <integer>, #key fill = #f)
  => (collections :: <sequence>)
   let sequences = make(<stretchy-vector>);
   let element-types = limited-collection-element-types(class);
   for (element-type :: <type> in element-types)
     let type = limited(class, of: element-type);
-    if (subtype?(<integer>, element-type))
-      add!(sequences, as(type, range(from: 1, to: collection-size)))
-    end;
-    if (subtype?(<character>, element-type))
-      add!(sequences,
-           if (collection-size < size($default-string))
-             as(type, copy-sequence($default-string, end: collection-size));
-           else
-             make(type, size: collection-size, fill: 'a');
-           end)
-    end;
-    if (subtype?(<vector>, element-type))
-      add!(sequences,
-           if (collection-size < size($default-vectors))
-             as(type, copy-sequence($default-vectors, end: collection-size));
-           else
-             make(type, size: collection-size, fill: #[]);
-           end)
-    end
-  end;
-  // Only return one for size 0, because they are all the same
-  if (collection-size = 0)
-    if (size(sequences) > 0)
-      vector(sequences[0])
+    let ref = make(<reference-sequence>,
+                   size: collection-size,
+                   generator: generator-of(element-type));
+    if (subtype?(type, <stretchy-collection>))
+      let text = format-to-string("Make %s with fill %s", type, fill);
+      if (instance?(fill, element-type))
+        check-no-condition(text,
+                           begin
+                             let coll = make(type,
+                                             size: collection-size,
+                                             fill: fill);
+                             for (i from 0 below size(ref))
+                               coll[i] := ref[i];
+                             end for;
+                             sequences := add!(sequences, coll)
+                           end);
+      else
+        check-condition(text,
+                        <error>,
+                        begin
+                          make(type, size: collection-size, fill: fill)
+                        end);
+      end if;      
     else
-      #[]
-    end if
-  else
-    sequences
-  end
+      sequences := add!(sequences, as(type, ref))
+    end if;
+  end;
+  sequences
 end method make-limited-collections-of-size;
 
 define method make-limited-collections-of-size
-    (class :: subclass(<table>), collection-size :: <integer>)
+    (class :: subclass(<table>), collection-size :: <integer>, #key)
  => (tables :: <sequence>)
   let table-1 = make(limited(<table>, of: <integer>));
   let table-2 = make(limited(<table>, of: <character>));
-  for (i from 0 below collection-size,
-       char in $default-string)
-    table-1[i] := i + 1;
-    table-2[i] := char;
+  let gen-1 = generator-of(<integer>);
+  let gen-2 = generator-of(<character>);
+  for (i from 0 below collection-size)
+    table-1[i] := gen-1(i);
+    table-2[i] := gen-2(i);
   end;
   vector(table-1, table-2)
 end method make-limited-collections-of-size;
 
 define method make-limited-collections-of-size
-    (class :: subclass(<list>), collection-size :: <integer>)
+    (class :: subclass(<list>), collection-size :: <integer>, #key)
  => (pairs :: <sequence>)
+  #[]
+end method make-limited-collections-of-size;
+
+define method make-limited-collections-of-size
+  (class == <simple-object-vector>, collection-size :: <integer>, #key)
+  => (vectors :: <sequence>)
+  // <s-o-v> is already 'limited' therefore does not support this.
   #[]
 end method make-limited-collections-of-size;
 
 define method expected-element 
     (collection :: <collection>, index) => (element)
   let element-type = collection-element-type(collection);
-  if (element-type = <object>)
-    element-type := 
-      select (collection[0] by instance?)
-        <character> => <character>;
-        <integer>   => <integer>;
-        <vector>    => <vector>;
-      end;
+  if ((element-type = <object>) & (~ empty?(collection)))
+    element-type := object-class(collection[0])
   end;
-  select (element-type by subtype?)
-    <character> =>
-      if (size(collection) < size($default-string))
-        $default-string[index]
-      else
-        'a'
-      end;
-    <integer>, <real> =>
-      index + 1;
-    <vector> =>
-      if (size(collection) < size($default-vectors))
-        $default-vectors[index];
-      else 
-        #[]
-      end if;
-  end
+  let gen = generator-of(element-type);
+  gen(index)
 end method expected-element;
 
 define method expected-key-sequence
@@ -343,8 +328,11 @@ end method collection-default;
 
 
 /// Collection test functions
+define generic test-collection
+  (name :: <string>, collection :: <collection>, #key fill) => ();
+
 define method test-collection
-    (name :: <string>, collection :: <collection>) => ()
+    (name :: <string>, collection :: <collection>, #key fill) => ()
   do(method (function) function(name, collection) end,
      vector(// Functions on <collection>
             test-as,
@@ -375,7 +363,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <sequence>) => ()
+    (name :: <string>, collection :: <sequence>, #key fill) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Functions on <sequence>
@@ -408,7 +396,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <mutable-collection>) => ()
+    (name :: <string>, collection :: <mutable-collection>, #key fill) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Functions on <mutable-collection>
@@ -424,18 +412,18 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <stretchy-collection>) => ()
+    (name :: <string>, collection :: <stretchy-collection>, #key fill) => ()
   next-method();
-  do(method (function) function(name, collection) end,
+  do(method (function) function(name, collection, fill: fill) end,
      vector(// Methods on <stretchy-collection>
             test-size-setter
             ))
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <mutable-sequence>) => ()
+    (name :: <string>, collection :: <mutable-sequence>, #key fill) => ()
   next-method();
-  do(method (function) function(name, collection) end,
+  do(method (function) function(name, collection, fill: fill) end,
      vector(// Functions on <mutable-sequence>
             test-first-setter,
             test-second-setter,
@@ -447,7 +435,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <array>) => ()
+    (name :: <string>, collection :: <array>, #key fill) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Functions on <array>
@@ -461,7 +449,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <vector>) => ()
+    (name :: <string>, collection :: <vector>, #key fill) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Constructors for <vector>
@@ -470,7 +458,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <deque>) => ()
+    (name :: <string>, collection :: <deque>, #key fill) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Functions on <deque>
@@ -482,7 +470,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <list>) => ()
+    (name :: <string>, collection :: <list>, #key fill) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Constructors for <list>
@@ -501,7 +489,7 @@ end method test-collection;
          crashes, but it runs fine now.  -carlg 98-08-26 1.1c4
  */
 define method test-collection
-    (name :: <string>, collection :: <pair>) => ()
+    (name :: <string>, collection :: <pair>, #key fill) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Functions on <pair>
@@ -511,7 +499,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <string>) => ()
+    (name :: <string>, collection :: <string>, #key fill) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Methods on <string>
@@ -524,7 +512,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <table>) => ()
+    (name :: <string>, collection :: <table>, #key fill) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Generic Functions on <table>
@@ -535,8 +523,9 @@ end method test-collection;
 define method make-array 
     (dimensions :: <sequence>) => (array :: <array>)
   let array = make(<array>, dimensions: dimensions);
+  let gen = generator-of(<integer>);
   for (i from 0 below size(array))
-    array[i] := i + 1
+    array[i] := gen(i);
   end;
   array
 end method make-array;
@@ -681,6 +670,74 @@ define method collection-valid-as-class?
   #t
 end method collection-valid-as-class?;
 
+// Returns a canonical 'example element' for a collection
+define function make-element-for
+  (collection :: <collection>)
+  => (element :: <object>)
+  let type = collection-element-type(collection);
+  collection-default(type);
+end function;
+
+// Check if the collection would be usable (without type errors)
+// with the given fill
+define function fill-compatible?
+  (collection :: <collection>, fill :: <object>)
+  => (well? :: <boolean>)
+  instance?(fill, collection-element-type(collection))
+end function;
+
+
+// Define a pseudo-collection of potentially limitless size
+// that returns generated elements
+define class <reference-sequence> (<sequence>)
+  constant slot %size :: <integer>, required-init-keyword: size:;
+  constant slot generator :: <function>,
+    init-value: identity,
+    init-keyword: generator:;
+end class;
+
+define method size(rc :: <reference-sequence>) => (size :: <integer>)
+  rc.%size;
+end method;
+
+define method element(rc :: <reference-sequence>, index :: <integer>, #key default) => (item :: <object>)
+  rc.generator(index);
+end method;
+
+define method forward-iteration-protocol(rc :: <reference-sequence>)
+  => (initial-state, limit,
+      next-state :: <function>,
+      finished-state? :: <function>,
+      current-key :: <function>,
+      current-element :: <function>,
+      current-element-setter :: <function>,
+      copy-state :: <function>)
+  values(0,
+         rc.%size,
+         method(c, s) s + 1 end,
+         method(c, s, l) s == l end,
+         method(c, s) s end,
+         element,
+         element-setter,
+         method(c, s) s end);
+end method;
+
+define method generator-of(cls :: subclass(<object>)) => (generator :: <function>)
+  vector
+end method;
+
+define method generator-of(cls :: subclass(<integer>)) => (generator :: <function>)
+  identity
+end method;
+
+define constant char-generator = method(index)
+                                   as(<character>, 33 + modulo(index, 64))
+                                 end;
+
+define method generator-of(cls :: subclass(<character>)) => (generator :: <function>)
+  char-generator
+end method;
+  
 
 /// Collection testing
 
@@ -1008,24 +1065,30 @@ end method test-type-for-copy;
 // Note that size-setter is only on both <stretchy-collection> 
 // and <sequence>! Why is there no <stretchy-sequence>?
 define method test-size-setter
-    (name :: <string>, collection :: <stretchy-collection>) => ()
+    (name :: <string>, collection :: <stretchy-collection>, #key fill) => ()
   if (instance?(collection, <sequence>))
     let new-size = size(collection) + 5;
-    if (instance?(#f, collection-element-type(collection)))
+    if (fill-compatible?(collection, fill))
       check-equal(format-to-string("%s resizes", name),
                   begin
                     size(collection) := new-size;
                     size(collection)
                   end,
                   new-size)
-    end;
+    else // Not viable because the fill is not an allowed element
+      check-condition(format-to-string("%s (incompatible fill %s) resizes", name, fill),
+                      <error>,
+                      begin
+                        size(collection) := new-size;
+                      end);
+    end if;
     check-equal(format-to-string("%s emptied", name),
                 begin
                   size(collection) := 0;
                   size(collection)
                 end,
                 0);
-  end
+  end if
 end method test-size-setter;
 
 
@@ -1345,18 +1408,17 @@ define method test-sort!
 end method test-sort!;
 
 define method test-last
-    (name :: <string>, sequence :: <sequence>) => ()
-  let sequence-size = size(sequence);
-  let last-item = sequence-size & sequence-size > 0 & sequence[sequence-size - 1];
-  case
-    last-item =>
-      check-equal(format-to-string("%s 'last' returns last item", name),
-                  last(sequence), last-item);
-    otherwise =>
-      check-condition(format-to-string("%s 'last' generates an error", name),
+  (name :: <string>, sequence :: <sequence>) => ()
+  if (empty?(sequence))
+    check-condition(format-to-string("%s 'last' generates an error", name),
                       <error>,
-                      last(sequence))
-  end;
+                    last(sequence))
+  else
+    let sequence-size = size(sequence);
+    let last-item = sequence[sequence-size - 1];
+    check-equal(format-to-string("%s 'last' returns last item", name),
+                  last(sequence), last-item);
+  end if;
 end method test-last;
 
 define method test-subsequence-position
@@ -1366,72 +1428,65 @@ end method test-subsequence-position;
 
 define method test-nth-setter
     (name :: <string>, sequence :: <mutable-sequence>,
-     nth-setter :: <function>, n :: <integer>)
- => ()
-  let item
-    = select (collection-element-type(sequence) by subtype?)
-        <character> => 'z';
-        <number>    => 100;
-        <vector>    => #['z'];
-        <object>    => 100;
-      end;
-  case
-    n < size(sequence) =>
-      check-true(name,
-                 begin
-                   let copy = shallow-copy(sequence);
-                   nth-setter(item, copy);
-                   copy[n] = item
-                 end);
-    instance?(sequence, <stretchy-collection>)
-      & (n = size(sequence) | 
-           instance?(#f, collection-element-type(sequence))) =>
-      check-true(name,
-                 begin
-                   let copy = shallow-copy(sequence);
-                   nth-setter(item, copy);
-                   size(copy) = n + 1
-                     & copy[n] = item
-                 end);
-    otherwise =>
-      check-condition(format-to-string("%s generates an error", name),
-                      <error>,
-                      begin
-                        let copy = shallow-copy(sequence);
-                        nth-setter(item, copy)
-                      end);
-  end;
+     nth-setter :: <function>, n :: <integer>, #key fill)
+  => ()
+  // Does it need to stretch?
+  let needs-stretch? = n >= size(sequence);
+  // Can it stretch enough? (if extending by more than one element
+  // it will need to have a compatible fill.)
+  let can-stretch? = instance?(sequence, <stretchy-collection>)
+    & (n = size(sequence) | fill-compatible?(sequence, fill));
+  
+  let item = make-element-for(sequence);
+  name := format-to-string("%s, setting %s", name, item);
+
+  // check success or error, depending on whether it should succeed
+  if (~needs-stretch? | can-stretch?)
+    check-true(name,
+               begin
+                 let copy = shallow-copy(sequence);
+                 nth-setter(item, copy);
+                 copy[n] = item
+               end);
+  else
+    let reason = if (fill-compatible?(sequence, fill))
+                   ""
+                 else
+                   format-to-string(" (fill %s not compatible)", fill)
+                 end;
+    check-condition(format-to-string("%s%s generates an error", name, reason),
+                    <error>,
+                    begin
+                      let copy = shallow-copy(sequence);
+                      nth-setter(item, copy)
+                    end);
+  end if;
 end method test-nth-setter;
 
 define method test-first-setter
-    (name :: <string>, sequence :: <mutable-sequence>) => ()
+    (name :: <string>, sequence :: <mutable-sequence>, #key fill) => ()
   let name = format-to-string("%s first-setter", name);
-  test-nth-setter(name, sequence, first-setter, 0)
+  test-nth-setter(name, sequence, first-setter, 0, fill: fill)
 end method test-first-setter;
 
 define method test-second-setter
-    (name :: <string>, sequence :: <mutable-sequence>) => ()
-  let name = format-to-string("%s second-setter", name);
-  test-nth-setter(name, sequence, second-setter, 1)
+    (name :: <string>, sequence :: <mutable-sequence>, #key fill) => ()
+  let name = format-to-string("%s second-setter (fill %s)", name, fill);
+  test-nth-setter(name, sequence, second-setter, 1, fill: fill)
 end method test-second-setter;
 
 define method test-third-setter
-    (name :: <string>, sequence :: <mutable-sequence>) => ()
+    (name :: <string>, sequence :: <mutable-sequence>, #key fill) => ()
   let name = format-to-string("%s third-setter", name);
-  test-nth-setter(name, sequence, third-setter, 2)
+  test-nth-setter(name, sequence, third-setter, 2, fill: fill)
 end method test-third-setter;
 
 define method test-last-setter
-    (name :: <string>, sequence :: <mutable-sequence>) => ()
+    (name :: <string>, sequence :: <mutable-sequence>, #key fill) => ()
   let sequence-size = size(sequence);
   let last-key = sequence-size & sequence-size > 0 & sequence-size - 1;
-  let item
-    = select (collection-element-type(sequence) by subtype?)
-        <character> => 'z';
-        <number>    => 100;
-        <vector>    => #['z'];
-        <object>    => 100;
-      end;
+  let item = make-element-for(sequence);
+
   case
     last-key =>
       check-true(format-to-string("%s last", name),
