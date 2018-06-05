@@ -365,7 +365,12 @@ end method test-collection;
 define method test-collection
     (name :: <string>, collection :: <sequence>, #key fill) => ()
   next-method();
-  do(method (function) function(name, collection) end,
+  local method test-protected(function)
+          check-no-condition(name, begin
+                                     function(name, collection)
+                                   end)
+        end method;
+  do(test-protected,
      vector(// Functions on <sequence>
             test-concatenate,
             test-concatenate-as,
@@ -428,7 +433,7 @@ define method test-collection
             test-first-setter,
             test-second-setter,
             test-third-setter,
-           
+
             // Generic functions on <mutable-sequence>
             test-last-setter
             ))
@@ -1096,8 +1101,19 @@ end method test-size-setter;
 /// Sequence testing
 
 define method test-concatenate
-    (name :: <string>, sequence :: <sequence>) => ()
-  //---*** Fill this in...
+  (name :: <string>, sequence :: <sequence>) => ()
+  let original-size = size(sequence);
+  let doubled = concatenate(sequence, sequence);
+  check-equal(format-to-string("concatenate %s to itself doubles length", name),
+              original-size * 2,
+              size(doubled));
+  let tripled = concatenate(sequence, sequence, sequence);
+  check-equal(format-to-string("concatenate %s to itself twice triples length", name),
+              original-size * 3,
+              size(tripled));
+  check-equal(format-to-string("concatenate %s doesn't change original", name),
+              original-size,
+              size(sequence));
 end method test-concatenate;
 
 define method test-concatenate-as
@@ -1178,27 +1194,87 @@ end method test-third;
 
 define method test-add
     (name :: <string>, sequence :: <sequence>) => ()
-  //---*** Fill this in...
+  let name = format-to-string("add(..., %s)", name);
+  let new-element = make-element-for(sequence);
+  let old-size = size(sequence);
+  let new-sequence = add(sequence, new-element);
+  check-equal(name, size(sequence), old-size);
+  check-equal(name, size(new-sequence), old-size + 1);
+  check-true(name, member?(new-element, new-sequence));
+  //---*** More thorough checks...
 end method test-add;
 
 define method test-add!
-    (name :: <string>, sequence :: <sequence>) => ()
-  //---*** Fill this in...
+  (name :: <string>, sequence :: <sequence>) => ()
+  let name = format-to-string("add!(..., %s)", name);
+  let new-element = make-element-for(sequence);
+  let old-size = size(sequence);
+  sequence := shallow-copy(sequence);
+  sequence := add!(sequence, new-element);
+  check-equal(name, size(sequence), old-size + 1);
+  check-true(name, member?(new-element, sequence));
+  //---*** More thorough checks...
 end method test-add!;
 
 define method test-add-new
     (name :: <string>, sequence :: <sequence>) => ()
-  //---*** Fill this in...
+  let name = format-to-string("add-new(..., %s)", name);
+  let new-element = make-element-for(sequence);
+  unless (member?(new-element, sequence))
+    let old-size = size(sequence);
+    let new-sequence = add-new(sequence, new-element);
+    check-equal(name, size(sequence), old-size);
+    check-equal(name, size(sequence) + 1, size(new-sequence));
+    sequence := new-sequence;
+  end;
+  // Second add should be no-op
+  check-true(name, member?(new-element, sequence));
+  let new-sequence = add-new(sequence, new-element);
+  check-equal(name, size(sequence), size(new-sequence));
+  //---*** More thorough checks...
 end method test-add-new;
 
 define method test-add-new!
     (name :: <string>, sequence :: <sequence>) => ()
-  //---*** Fill this in...
+  let name = format-to-string("add-new!(..., %s", name);
+  sequence := shallow-copy(sequence);
+  let new-element = make-element-for(sequence);
+  unless (member?(new-element, sequence))
+    let old-size = size(sequence);
+    sequence := add-new!(sequence, new-element);
+    check-equal(name, old-size + 1, size(sequence));
+  end;
+  // Second add should be no-op
+  check-true(name, member?(new-element, sequence));
+  let old-size = size(sequence);
+  sequence := add-new!(sequence, new-element);
+  check-equal(name, old-size, size(sequence));
+  //---*** More thorough checks...
 end method test-add-new!;
 
 define method test-remove
-    (name :: <string>, sequence :: <sequence>) => ()
-  //---*** Fill this in...
+  (name :: <string>, sequence :: <sequence>) => ()
+  let name = format-to-string("remove(..., %s)", name);
+  if (empty?(sequence))
+    check-no-condition(name, begin
+                               sequence := remove(sequence, #t);
+                             end);
+    check-true(name, empty?(sequence));
+  else
+    let element = first(sequence);
+    let expected-size = size(sequence);
+    for (e in sequence)
+      if (e == element)
+        expected-size := expected-size - 1;
+      end if
+    end for;
+      
+    let new-sequence = remove(sequence, element);
+    check-equal(name, expected-size, size(new-sequence));
+    new-sequence := remove(new-sequence, element);
+    check-equal(name, expected-size, size(new-sequence));
+  end if;
+  //---*** Also include test: and count: keys
 end method test-remove;
 
 define method test-remove!
@@ -1208,7 +1284,29 @@ end method test-remove!;
 
 define method test-choose
     (name :: <string>, sequence :: <sequence>) => ()
-  //---*** Fill this in...
+  name := format-to-string("choose(..., %s)", name);
+  let el1 = #f;
+  let el2 = #f;
+  unless (empty?(sequence))
+    el1 := expected-element(sequence, 1);
+    el2 := expected-element(sequence, 3);
+  end;
+  local method predicate(el)
+          (el = el1) | (el = el2)
+        end;
+  local method negative-predicate(el)
+          ~ predicate(el)
+        end;
+  let chosen = choose(predicate, sequence);
+  let unchosen = choose(negative-predicate, sequence);
+  check-equal(name, size(sequence), size(chosen) + size(unchosen));
+  // 'el1' must be in both the given sequence and the chosen sequence
+  // or neither of them.
+  check-equal(name, member?(el1, sequence), member?(el1, chosen));
+  check-false(name, member?(el1, unchosen));
+
+  check-equal(name, member?(el2, sequence), member?(el2, chosen));
+  check-false(name, member?(el2, unchosen));
 end method test-choose;
 
 define method test-choose-by
@@ -1509,12 +1607,29 @@ end method test-last-setter;
 
 define method test-rank
     (name :: <string>, array :: <array>) => ()
-  //---*** Fill this in...
+  let expected = size(dimensions(array));
+  check-equal(format-to-string("%s rank equals number of dimensions", name),
+              expected,
+              rank(array));
 end method test-rank;
 
 define method test-row-major-index
     (name :: <string>, array :: <array>) => ()
-  //---*** Fill this in...
+  let position = make(<vector>, size: rank(array), fill: 0);
+  check-equal(format-to-string("%s at (0,...,0) is position 0", name),
+              0,
+              apply(row-major-index, array, position));
+  let N = dimensions(array)[0] - 1;
+  position[0] := N;
+  check-equal(format-to-string("%s at (N,...,0) is position N", name),
+              N,
+              apply(row-major-index, array, position));
+  for (i from 0 below rank(array))
+    position[i] := dimensions(array)[i] - 1;
+  end for;
+  check-equal(format-to-string("%s at (N,...,M) is last position", name),
+              size(array) - 1,
+              apply(row-major-index, array, position));
 end method test-row-major-index;
 
 define method test-aref
