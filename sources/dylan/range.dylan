@@ -418,6 +418,8 @@ define sealed method remove!
   //--- What about 'test'?
   if (~count | count > 0)
     case
+      (range.size = 1 & elt = range.range-from) =>
+        $empty-range;
       (elt = range.last) =>
         range.size := range.size - 1;
         range;
@@ -425,8 +427,6 @@ define sealed method remove!
         range.size := range.size - 1;
         range.range-from := range.range-from + range.range-by;
         range;
-      (range.size = 1 & elt = range.range-from) =>
-        $empty-range;
       otherwise =>
         if (count & count > 0 & member?(elt, range))
           remove!(shallow-copy(range), elt, test: test, count: count)
