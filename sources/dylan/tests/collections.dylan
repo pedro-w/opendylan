@@ -255,7 +255,7 @@ define method make-limited-collections-of-size
 end method make-limited-collections-of-size;
 
 define method make-limited-collections-of-size
-  (class :: subclass(<range>), collection-size :: <integer>, #key)
+  (class :: subclass(<range>), collection-size :: <integer>, #key fill)
   // <range> can only be limited over subclasses of <real>
   vector(make(limited(<range>, of: <integer>), from: 0, below: collection-size))
 end method make-limited-collections-of-size;
@@ -372,9 +372,10 @@ define method test-collection
     (name :: <string>, collection :: <sequence>, #key fill) => ()
   next-method();
   local method test-protected(function)
-          check-no-condition(name, begin
-                                     function(name, collection)
-                                   end)
+          check-no-condition(name,
+                             begin
+                               function(name, collection)
+                             end)
         end method;
   do(test-protected,
      vector(// Functions on <sequence>
@@ -922,8 +923,7 @@ end method test-key-sequence;
 define method test-reduce
   (name :: <string>, collection :: <collection>) => ()
   local method compose(l, r)
-          r := format-to-string("%=", r);
-          concatenate(l, r)
+          format-to-string("%s|%s", l, r);
         end method;
   let reduced = reduce(compose, "<<", collection);
   let expected = "<<";
@@ -939,7 +939,7 @@ end method test-reduce;
 define method test-reduce1
     (name :: <string>, collection :: <collection>) => ()
   local method compose(l, r)
-          format-to-string("%=|%=", l, r);
+          format-to-string("%s|%s", l, r);
         end method;
   unless (empty?(collection))
     // Reduce1 undefined for empty collections
@@ -947,7 +947,7 @@ define method test-reduce1
     let keys = key-sequence(collection);
     let expected = collection[first(keys)];
     for (i from 1 below size(keys))
-      expected := compose(expected, collection[i]);
+      expected := compose(expected, collection[keys[i]]);
     end for;
     check-equal(format-to-string("%s reduce1", name),
                 expected,
@@ -1205,7 +1205,9 @@ define method test-nth-getter
  => ()
   let nth-item = size(sequence) > n & sequence[n];
   if (nth-item)
-    check-equal(name, nth-getter(sequence), nth-item)
+    check-equal(format-to-string("%s returns correct element", name),
+                nth-getter(sequence),
+                nth-item)
   else
     check-condition(format-to-string("%s generates an error", name),
                     <error>,
@@ -1245,7 +1247,7 @@ end method test-add;
 
 define method test-add!
   (name :: <string>, sequence :: <sequence>) => ()
-  let name = format-to-string("add!(..., %s)", name);
+  name := format-to-string("add!(..., %s)", name);
   let new-element = make-element-for(sequence);
   let old-size = size(sequence);
   sequence := shallow-copy(sequence);
@@ -1257,7 +1259,7 @@ end method test-add!;
 
 define method test-add-new
     (name :: <string>, sequence :: <sequence>) => ()
-  let name = format-to-string("add-new(..., %s)", name);
+  name := format-to-string("add-new(..., %s)", name);
   let new-element = make-element-for(sequence);
   unless (member?(new-element, sequence))
     let old-size = size(sequence);
@@ -1303,7 +1305,7 @@ define method test-remove
     let element = first(sequence);
     let expected-size = size(sequence);
     for (e in sequence)
-      if (e == element)
+      if (e = element)
         expected-size := expected-size - 1;
       end if
     end for;
