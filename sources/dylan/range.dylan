@@ -6,6 +6,20 @@ License:      See License.txt in this distribution for details.
 Warranty:     Distributed WITHOUT WARRANTY OF ANY KIND
 
 /// <range> classes
+///
+/// Calling make on the abstract class <range> will return an instance
+/// of one of its concrete subclasses, which are not specified by the DRM.
+///
+/// In this implementation they are:
+/// <empty-range> - a range with no members
+/// <finite-range> - a bounded range with at least one member
+/// <infinite-range> - an unbounded range with (potentially) infinite members
+/// <constant-range> - a sequence comprising a (potentially infinite) number
+/// of repeats of the same element
+///
+/// NOTE: attempting to create an empty range using make, or by removing
+/// elements from a <finite-range> or <constant-range> will always return
+/// the singleton instance of <empty-range>, called $empty-range in this file.
 
 define abstract primary class <range> (<sequence>)
   slot range-from :: <number>, required-init-keyword: from:;
