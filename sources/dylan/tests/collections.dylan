@@ -254,6 +254,12 @@ define method make-limited-collections-of-size
   #[]
 end method make-limited-collections-of-size;
 
+define method make-limited-collections-of-size
+  (class :: subclass(<range>), collection-size :: <integer>, #key)
+  // <range> can only be limited over subclasses of <real>
+  vector(make(limited(<range>, of: <integer>), from: 0, below: collection-size))
+end method make-limited-collections-of-size;
+
 define method expected-element 
     (collection :: <collection>, index) => (element)
   let element-type = collection-element-type(collection);
@@ -914,13 +920,39 @@ define method test-key-sequence
 end method test-key-sequence;
 
 define method test-reduce
-    (name :: <string>, collection :: <collection>) => ()
-  //---*** Fill this in...
+  (name :: <string>, collection :: <collection>) => ()
+  local method compose(l, r)
+          r := format-to-string("%=", r);
+          concatenate(l, r)
+        end method;
+  let reduced = reduce(compose, "<<", collection);
+  let expected = "<<";
+  let keys = key-sequence(collection);
+  for (i in keys)
+    expected := compose(expected, collection[i]);
+  end for;
+  check-equal(format-to-string("%s reduce", name),
+              expected,
+              reduced);
 end method test-reduce;
 
 define method test-reduce1
     (name :: <string>, collection :: <collection>) => ()
-  //---*** Fill this in...
+  local method compose(l, r)
+          format-to-string("%=|%=", l, r);
+        end method;
+  unless (empty?(collection))
+    // Reduce1 undefined for empty collections
+    let reduced = reduce1(compose, collection);
+    let keys = key-sequence(collection);
+    let expected = collection[first(keys)];
+    for (i from 1 below size(keys))
+      expected := compose(expected, collection[i]);
+    end for;
+    check-equal(format-to-string("%s reduce1", name),
+                expected,
+                reduced);
+  end unless
 end method test-reduce1;
 
 define method test-member?
@@ -968,7 +1000,8 @@ end method test-backward-iteration-protocol;
 
 define method test-=
     (name :: <string>, collection :: <collection>) => ()
-  //---*** Fill this in...
+  check-true(format-to-string("%s equals itself", name),
+             collection = collection);
 end method test-=;
 
 define method test-empty?
@@ -979,8 +1012,14 @@ define method test-empty?
 end method test-empty?;
 
 define method test-size
-    (name :: <string>, collection :: <collection>) => ()
-  //---*** Fill this in...
+  (name :: <string>, collection :: <collection>) => ()
+  let expected = 0;
+  for (_ in collection)
+    expected := expected + 1
+  end for;
+  check-equal(format-to-string("%s size", name),
+              expected,
+              size(collection));
 end method test-size;
 
 define method test-shallow-copy
@@ -1620,8 +1659,8 @@ define method test-row-major-index
               0,
               apply(row-major-index, array, position));
   let N = dimensions(array)[0] - 1;
-  position[0] := N;
-  check-equal(format-to-string("%s at (N,...,0) is position N", name),
+  last(position) := N;
+  check-equal(format-to-string("%s at (0,...,N) is position N", name),
               N,
               apply(row-major-index, array, position));
   for (i from 0 below rank(array))
@@ -1634,75 +1673,166 @@ end method test-row-major-index;
 
 define method test-aref
     (name :: <string>, array :: <array>) => ()
-  //---*** Fill this in...
+  name := format-to-string("%s aref equals indexed value", name);
+  local method next(position)
+          block(return)
+            for (i from (rank(array) - 1) to 0 by -1)
+              position[i] := position[i] + 1;
+              if (position[i] < dimension(array, i))
+                return(position);
+              else
+                position[i] := 0;
+              end if;
+            end for;
+          end block;
+        end method;
+  let position = make(<vector>, size: rank(array), fill: 0);
+  for (i from 0 below size(array))
+    check-equal(name, apply(aref, array, position), array[i]);
+    position := next(position);
+  end for;
 end method test-aref;
 
 define method test-aref-setter
-    (name :: <string>, array :: <array>) => ()
-  //---*** Fill this in...
+  (name :: <string>, array :: <array>) => ()
+  unless(empty?(array))
+    name := format-to-string("%s aref set to an element", name);
+    local method next(position)
+            block(return)
+              for (i from (rank(array) - 1) to 0 by -1)
+                position[i] := position[i] + 1;
+                if (position[i] < dimension(array, i))
+                  return(position);
+                else
+                  position[i] := 0;
+                end if;
+              end for;
+            end block;
+          end method;
+    let array = shallow-copy(array);
+    let item = make-element-for(array);
+    for (position = make(<vector>, size: rank(array), fill: 0)
+           then next(position),
+         while: position)
+      apply(aref-setter, item, array, position);
+    end for;
+    check-true(name, every?(curry(\=, item), array));
+  end unless;
 end method test-aref-setter;
 
 define method test-dimensions
     (name :: <string>, array :: <array>) => ()
-  //---*** Fill this in...
+  check-equal(format-to-string("%s dimensions size equals rank", name),
+              rank(array),
+              size(dimensions(array)));
+  let product = reduce1(\*, dimensions(array));
+  check-equal(format-to-string("%s product of dimensions equals size", name),
+              size(array),
+              product);
 end method test-dimensions;
 
 define method test-dimension
-    (name :: <string>, array :: <array>) => ()
-  //---*** Fill this in...
+  (name :: <string>, array :: <array>) => ()
+  let name = format-to-string("%s dimension(..., i) equals dimensions(...)[i]", name);
+  let dims = dimensions(array);
+  for (i from 0 below rank(array))
+    check-equal(name, dims[i], dimension(array, i));
+  end for;
 end method test-dimension;
 
 
 /// Vector tests
 
 define method test-vector
-    (name :: <string>, array :: <vector>) => ()
-  //---*** Fill this in...
+  (name :: <string>, array :: <vector>) => ()
+  let copy = apply(vector, array);
+  check-true(format-to-string("%s vector copy", name),
+             every?(\=, copy, array))
 end method test-vector;
 
 
 /// Deque tests
 
 define method test-push
-    (name :: <string>, deque :: <deque>) => ()
-  //---*** Fill this in...
+  (name :: <string>, deque :: <deque>) => ()
+  deque := shallow-copy(deque);
+  name := format-to-string("%s push", name);
+  let element = make-element-for(deque);
+  let old-size = size(deque);
+  push(deque, element);
+  check-equal(name, old-size + 1, size(deque));
+  check-equal(name, element, first(deque));
 end method test-push;
 
 define method test-pop
     (name :: <string>, deque :: <deque>) => ()
-  //---*** Fill this in...
+  unless(empty?(deque))
+    deque := shallow-copy(deque);
+    name := format-to-string("%s pop", name);
+    let element = first(deque);
+    let old-size = size(deque);
+    let popped = pop(deque);
+    check-equal(name, old-size - 1, size(deque));
+    check-equal(name, element, popped);
+  end unless;
 end method test-pop;
 
 define method test-push-last
     (name :: <string>, deque :: <deque>) => ()
-  //---*** Fill this in...
+  deque := shallow-copy(deque);
+  name := format-to-string("%s push-last", name);
+  let element = make-element-for(deque);
+  let old-size = size(deque);
+  push-last(deque, element);
+  check-equal(name, old-size + 1, size(deque));
+  check-equal(name, element, last(deque));
 end method test-push-last;
 
 define method test-pop-last
     (name :: <string>, deque :: <deque>) => ()
-  //---*** Fill this in...
+  unless(empty?(deque))
+    deque := shallow-copy(deque);
+    name := format-to-string("%s pop-last", name);
+    let element = last(deque);
+    let old-size = size(deque);
+    let popped = pop-last(deque);
+    check-equal(name, old-size - 1, size(deque));
+    check-equal(name, element, popped);
+  end unless;
 end method test-pop-last;
 
 
 /// List tests
 
 define method test-list
-    (name :: <string>, list :: <list>) => ()
-  //---*** Fill this in...
+  (name :: <string>, the-list :: <list>) => ()
+  let copy = apply(list, as(<vector>, the-list));
+  check-true(format-to-string("%s list", name),
+             every?(\=, the-list, copy));
 end method test-list;
 
 define method test-pair
-    (name :: <string>, list :: <list>) => ()
-  //---*** Fill this in...
+  (name :: <string>, list :: <list>) => ()
+  unless(empty?(list))
+    let new-pair = pair(head(list), tail(list));
+    check-equal(format-to-string("%s pair", name),
+                list,
+                new-pair);
+  end unless;
 end method test-pair;
 
 define method test-head
-    (name :: <string>, list :: <list>) => ()
-  //---*** Fill this in...
+  (name :: <string>, list :: <list>) => ()
+  unless(empty?(list))
+    check-equal(format-to-string("%s head", name),
+                first(list),
+                head(list));
+  end unless;
 end method test-head;
 
 define method test-tail
-    (name :: <string>, list :: <list>) => ()
+  (name :: <string>, list :: <list>) => ()
+  
   //---*** Fill this in...
 end method test-tail;
 
