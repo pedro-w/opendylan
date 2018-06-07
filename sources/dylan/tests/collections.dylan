@@ -119,9 +119,6 @@ end method test-limited-collection-of-size;
 
 /// Test collection creation
 
-define constant $default-string  = "abcdefghijklmnopqrstuvwxyz";
-define constant $default-vectors = map-as(<vector>, vector, $default-string);
-
 define sideways method make-test-instance
     (class :: subclass(<collection>)) => (object)
   let spec = $collections-protocol-spec;
@@ -1295,7 +1292,7 @@ end method test-add-new!;
 
 define method test-remove
   (name :: <string>, sequence :: <sequence>) => ()
-  let name = format-to-string("remove(..., %s)", name);
+  name := format-to-string("remove(..., %s)", name);
   if (empty?(sequence))
     check-no-condition(name, begin
                                sequence := remove(sequence, #t);
@@ -1311,11 +1308,25 @@ define method test-remove
     end for;
       
     let new-sequence = remove(sequence, element);
-    check-equal(name, expected-size, size(new-sequence));
+    check-equal(format-to-string("%s has expected size", name),
+                expected-size, size(new-sequence));
     new-sequence := remove(new-sequence, element);
-    check-equal(name, expected-size, size(new-sequence));
+    check-equal(format-to-string("%s twice doesn't change size", name),
+                expected-size, size(new-sequence));
+    // Test for count: key
+    let extra = sequence;
+    let new-element = make-element-for(extra);
+    for (i from 1 to 5)
+      extra := add(extra, new-element);
+    end for;
+    check-equal(format-to-string("%s with count:2 removes the right number", name),
+                size(extra) - 2,
+                size(remove(extra, new-element, count: 2)));
+    check-equal(format-to-string("%s with count:4 removes the right number", name),
+                size(extra) - 4,
+                size(remove(extra, new-element, count: 4)));
   end if;
-  //---*** Also include test: and count: keys
+  //---*** Also include test: key
 end method test-remove;
 
 define method test-remove!
@@ -1856,7 +1867,21 @@ end method test-tail-setter;
 
 define method test-<
     (name :: <string>, string :: <string>) => ()
-  //---*** Fill this in...
+  check-false(format-to-string("%s is not < itself", name),
+              string < string);
+  let longer = concatenate(string, "X");
+  check-true(format-to-string("%s string < longer string", name),
+             string < longer);
+  unless(empty?(string))
+    local method next-char(c)
+            let code = as(<integer>, c);
+            as(element-type(string), code + 1)
+          end;
+    let copy = shallow-copy(string);
+    first(copy) := next-char(first(copy));
+    check-true(format-to-string("%s string < modified string", name),
+               string < copy);
+  end;
 end method test-<;
 
 define method valid-as-new-case?
