@@ -111,7 +111,7 @@ define method test-limited-collection-of-size
                   size(collection), collection-size);
       check-equal(format-to-string("%s = shallow-copy", individual-name),
                   shallow-copy(collection), collection);
-      test-collection(individual-name, collection, fill: fill)
+      test-collection(individual-name, collection)
     end
   end for;
 end method test-limited-collection-of-size;
@@ -332,10 +332,10 @@ end method collection-default;
 
 /// Collection test functions
 define generic test-collection
-  (name :: <string>, collection :: <collection>, #key fill) => ();
+  (name :: <string>, collection :: <collection>) => ();
 
 define method test-collection
-    (name :: <string>, collection :: <collection>, #key fill) => ()
+    (name :: <string>, collection :: <collection>) => ()
   do(method (function) function(name, collection) end,
      vector(// Functions on <collection>
             test-as,
@@ -366,7 +366,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <sequence>, #key fill) => ()
+    (name :: <string>, collection :: <sequence>) => ()
   next-method();
   local method test-protected(function)
           check-no-condition(name,
@@ -405,7 +405,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <mutable-collection>, #key fill) => ()
+    (name :: <string>, collection :: <mutable-collection>) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Functions on <mutable-collection>
@@ -421,18 +421,18 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <stretchy-collection>, #key fill) => ()
+    (name :: <string>, collection :: <stretchy-collection>) => ()
   next-method();
-  do(method (function) function(name, collection, fill: fill) end,
+  do(method (function) function(name, collection) end,
      vector(// Methods on <stretchy-collection>
             test-size-setter
             ))
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <mutable-sequence>, #key fill) => ()
+    (name :: <string>, collection :: <mutable-sequence>) => ()
   next-method();
-  do(method (function) function(name, collection, fill: fill) end,
+  do(method (function) function(name, collection) end,
      vector(// Functions on <mutable-sequence>
             test-first-setter,
             test-second-setter,
@@ -444,7 +444,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <array>, #key fill) => ()
+    (name :: <string>, collection :: <array>) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Functions on <array>
@@ -458,7 +458,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <vector>, #key fill) => ()
+    (name :: <string>, collection :: <vector>) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Constructors for <vector>
@@ -467,7 +467,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <deque>, #key fill) => ()
+    (name :: <string>, collection :: <deque>) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Functions on <deque>
@@ -479,7 +479,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <list>, #key fill) => ()
+    (name :: <string>, collection :: <list>) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Constructors for <list>
@@ -492,13 +492,8 @@ define method test-collection
             ))
 end method test-collection;
 
-/*---*** Comment this out for the moment because it causes the compiler
-  ---*** problems
-  ---*** Seems fine now.  Andy said this used to cause hard runtime
-         crashes, but it runs fine now.  -carlg 98-08-26 1.1c4
- */
 define method test-collection
-    (name :: <string>, collection :: <pair>, #key fill) => ()
+    (name :: <string>, collection :: <pair>) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Functions on <pair>
@@ -508,7 +503,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <string>, #key fill) => ()
+    (name :: <string>, collection :: <string>) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Methods on <string>
@@ -521,7 +516,7 @@ define method test-collection
 end method test-collection;
 
 define method test-collection
-    (name :: <string>, collection :: <table>, #key fill) => ()
+    (name :: <string>, collection :: <table>) => ()
   next-method();
   do(method (function) function(name, collection) end,
      vector(// Generic Functions on <table>
@@ -686,15 +681,6 @@ define function make-element-for
   let type = collection-element-type(collection);
   collection-default(type);
 end function;
-
-// Check if the collection would be usable (without type errors)
-// with the given fill
-define function fill-compatible?
-  (collection :: <collection>, fill :: <object>)
-  => (well? :: <boolean>)
-  instance?(fill, collection-element-type(collection))
-end function;
-
 
 // Define a pseudo-collection of potentially limitless size
 // that returns generated elements
@@ -982,7 +968,9 @@ end method test-find-key;
 
 define method test-key-test
     (name :: <string>, collection :: <collection>) => ()
-  //---*** Fill this in...
+  check-instance?(format-to-string("%s key-test is a function", name),
+                  <function>,
+                  key-test(collection));
 end method test-key-test;
 
 define method test-forward-iteration-protocol
@@ -1106,24 +1094,16 @@ end method test-type-for-copy;
 // Note that size-setter is only on both <stretchy-collection> 
 // and <sequence>! Why is there no <stretchy-sequence>?
 define method test-size-setter
-    (name :: <string>, collection :: <stretchy-collection>, #key fill) => ()
+    (name :: <string>, collection :: <stretchy-collection>) => ()
   if (instance?(collection, <sequence>))
     let new-size = size(collection) + 5;
-    if (fill-compatible?(collection, fill))
-      check-equal(format-to-string("%s resizes", name),
-                  begin
-                    size(collection) := new-size;
-                    size(collection)
-                  end,
-                  new-size)
-    else // Not viable because the fill is not an allowed element
-      check-condition(format-to-string("%s (incompatible fill %s) resizes", name, fill),
-                      <error>,
-                      begin
-                        size(collection) := new-size;
-                      end);
-    end if;
-    check-equal(format-to-string("%s emptied", name),
+    check-equal(format-to-string("%s resizes", name),
+                begin
+                  size(collection) := new-size;
+                  size(collection)
+                end,
+                new-size);
+    check-equal(format-to-string("%s empties", name),
                 begin
                   size(collection) := 0;
                   size(collection)
@@ -1287,12 +1267,12 @@ define method test-add-new!
   let old-size = size(sequence);
   sequence := add-new!(sequence, new-element);
   check-equal(name, old-size, size(sequence));
-  //---*** More thorough checks...
+  //---*** Add more thorough checks...
 end method test-add-new!;
 
 define method test-remove
   (name :: <string>, sequence :: <sequence>) => ()
-  name := format-to-string("remove(..., %s)", name);
+  name := format-to-string("remove(%s, ...)", name);
   if (empty?(sequence))
     check-no-condition(name, begin
                                sequence := remove(sequence, #t);
@@ -1300,7 +1280,8 @@ define method test-remove
     check-true(name, empty?(sequence));
   else
     let element = first(sequence);
-    let expected-size = size(sequence);
+    let old-size = size(sequence);
+    let expected-size = old-size;
     for (e in sequence)
       if (e = element)
         expected-size := expected-size - 1;
@@ -1313,10 +1294,13 @@ define method test-remove
     new-sequence := remove(new-sequence, element);
     check-equal(format-to-string("%s twice doesn't change size", name),
                 expected-size, size(new-sequence));
+    check-equal(format-to-string("%s doesn't modify original", name),
+                old-size,
+                size(sequence));
     // Test for count: key
     let extra = sequence;
     let new-element = make-element-for(extra);
-    for (i from 1 to 5)
+    for (_ from 1 to 5)
       extra := add(extra, new-element);
     end for;
     check-equal(format-to-string("%s with count:2 removes the right number", name),
@@ -1325,13 +1309,72 @@ define method test-remove
     check-equal(format-to-string("%s with count:4 removes the right number", name),
                 size(extra) - 4,
                 size(remove(extra, new-element, count: 4)));
+    local method not-equal(a, b) a ~= b end;
+    expected-size := 0;
+    for (e in sequence)
+      if (e = element)
+        expected-size := expected-size + 1
+      end if
+    end for;
+    let new-sequence = remove(sequence, element, test: not-equal);
+    check-equal(format-to-string("%s with test: has the right number of elements", name),
+                expected-size,
+                size(new-sequence));
   end if;
-  //---*** Also include test: key
 end method test-remove;
 
 define method test-remove!
     (name :: <string>, sequence :: <sequence>) => ()
-  //---*** Fill this in...
+  name := format-to-string("remove!(%s, ...)", name);
+  if (empty?(sequence))
+    check-no-condition(name, begin
+                               sequence := remove!(sequence, #t);
+                             end);
+    check-true(name, empty?(sequence));
+  else
+    let element = first(sequence);
+    let expected-size = size(sequence);
+    for (e in sequence)
+      if (e = element)
+        expected-size := expected-size - 1;
+      end if
+    end for;
+    let new-sequence = copy-sequence(sequence);  
+    new-sequence := remove!(new-sequence, element);
+    check-equal(format-to-string("%s has expected size", name),
+                expected-size, size(new-sequence));
+    new-sequence := remove!(new-sequence, element);
+    check-equal(format-to-string("%s twice doesn't change size", name),
+                expected-size, size(new-sequence));
+    // Test for count: key
+    let extra = sequence;
+    let new-element = make-element-for(extra);
+    for (_ from 1 to 5)
+      extra := add(extra, new-element);
+    end for;
+    check-equal(format-to-string("%s with count:2 removes the right number", name),
+                size(extra) - 2,
+                size(remove!(extra, new-element, count: 2)));
+    let extra = sequence;
+    for (i from 1 to 5)
+      extra := add(extra, new-element);
+    end for;
+    check-equal(format-to-string("%s with count:4 removes the right number", name),
+                size(extra) - 4,
+                size(remove!(extra, new-element, count: 4)));
+    local method not-equal(a, b) a ~= b end;
+    expected-size := 0;
+    for (e in sequence)
+      if (e = element)
+        expected-size := expected-size + 1
+      end if
+    end for;
+    let new-sequence = copy-sequence(sequence);
+    new-sequence := remove!(new-sequence, element, test: not-equal);
+    check-equal(format-to-string("%s with test: has the right number of elements", name),
+                expected-size,
+                size(new-sequence));
+  end if;
 end method test-remove!;
 
 define method test-choose
@@ -1578,61 +1621,53 @@ end method test-subsequence-position;
 
 define method test-nth-setter
     (name :: <string>, sequence :: <mutable-sequence>,
-     nth-setter :: <function>, n :: <integer>, #key fill)
+     nth-setter :: <function>, n :: <integer>)
   => ()
+  sequence := copy-sequence(sequence);
   // Does it need to stretch?
   let needs-stretch? = n >= size(sequence);
-  // Can it stretch enough? (if extending by more than one element
-  // it will need to have a compatible fill.)
-  let can-stretch? = instance?(sequence, <stretchy-collection>)
-    & (n = size(sequence) | fill-compatible?(sequence, fill));
+  // Can it stretch?
+  let can-stretch? = instance?(sequence, <stretchy-collection>);
   
   let item = make-element-for(sequence);
-  name := format-to-string("%s, setting %s", name, item);
 
   // check success or error, depending on whether it should succeed
   if (~needs-stretch? | can-stretch?)
-    check-true(name,
-               begin
-                 let copy = shallow-copy(sequence);
-                 nth-setter(item, copy);
-                 copy[n] = item
-               end);
+    check-equal(format-to-string("%s sets element", name),
+                begin
+                  nth-setter(item, sequence);
+                  sequence[n]
+                end,
+                item);
   else
-    let reason = if (fill-compatible?(sequence, fill))
-                   ""
-                 else
-                   format-to-string(" (fill %s not compatible)", fill)
-                 end;
-    check-condition(format-to-string("%s%s generates an error", name, reason),
+    check-condition(format-to-string("%s generates an error", name),
                     <error>,
                     begin
-                      let copy = shallow-copy(sequence);
-                      nth-setter(item, copy)
+                      nth-setter(item, sequence)
                     end);
   end if;
 end method test-nth-setter;
 
 define method test-first-setter
-    (name :: <string>, sequence :: <mutable-sequence>, #key fill) => ()
+    (name :: <string>, sequence :: <mutable-sequence>) => ()
   let name = format-to-string("%s first-setter", name);
-  test-nth-setter(name, sequence, first-setter, 0, fill: fill)
+  test-nth-setter(name, sequence, first-setter, 0)
 end method test-first-setter;
 
 define method test-second-setter
-    (name :: <string>, sequence :: <mutable-sequence>, #key fill) => ()
-  let name = format-to-string("%s second-setter (fill %s)", name, fill);
-  test-nth-setter(name, sequence, second-setter, 1, fill: fill)
+    (name :: <string>, sequence :: <mutable-sequence>) => ()
+  let name = format-to-string("%s second-setter", name);
+  test-nth-setter(name, sequence, second-setter, 1)
 end method test-second-setter;
 
 define method test-third-setter
-    (name :: <string>, sequence :: <mutable-sequence>, #key fill) => ()
+    (name :: <string>, sequence :: <mutable-sequence>) => ()
   let name = format-to-string("%s third-setter", name);
-  test-nth-setter(name, sequence, third-setter, 2, fill: fill)
+  test-nth-setter(name, sequence, third-setter, 2)
 end method test-third-setter;
 
 define method test-last-setter
-    (name :: <string>, sequence :: <mutable-sequence>, #key fill) => ()
+    (name :: <string>, sequence :: <mutable-sequence>) => ()
   let sequence-size = size(sequence);
   let last-key = sequence-size & sequence-size > 0 & sequence-size - 1;
   let item = make-element-for(sequence);
@@ -1845,21 +1880,37 @@ end method test-head;
 
 define method test-tail
   (name :: <string>, list :: <list>) => ()
-  
-  //---*** Fill this in...
+  unless (empty?(list))
+    let t = tail(list);
+    check-true(format-to-string("%s tail", name),
+               instance?(<empty-list>, t) |
+                 instance?(<pair>, t));
+    end unless;
 end method test-tail;
 
 
 /// Pair tests
 
 define method test-head-setter
-    (name :: <string>, pair :: <pair>) => ()
-  //---*** Fill this in...
+  (name :: <string>, pair :: <pair>) => ()
+  let old-head = head(pair);
+  let new-head = make-element-for(pair);
+  head(pair) := new-head;
+  check-equal(format-to-string("%s head-setter", name),
+              new-head,
+              head(pair));
+  head(pair) := old-head;
 end method test-head-setter;
 
 define method test-tail-setter
     (name :: <string>, pair :: <pair>) => ()
-  //---*** Fill this in...
+  let old-tail = tail(pair);
+  let new-tail = make-element-for(pair);
+  tail(pair) := new-tail;
+  check-equal(format-to-string("%s tail-setter", name),
+              new-tail,
+              tail(pair));
+  tail(pair) := old-tail;
 end method test-tail-setter;
 
 
