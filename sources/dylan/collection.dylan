@@ -468,38 +468,20 @@ end method map-into-stretchy-one;
 
 define method map-into-stretchy-one
     (fun :: <function>, target :: <mutable-sequence>, coll :: <sequence>)
- => (target :: <mutable-collection>);
-
+  => (target :: <mutable-collection>);
+  // Resize if needed.
+  if (coll.size > target.size)
+    target.size := coll.size
+  end;
+  // Then iterate both, stopping when the source is exhausted.
   with-fip-of coll with prefix c-
     with-fip-of target with prefix t-
       let t-state = t-initial-state;
       for (c-state = c-initial-state then c-next-state(coll, c-state),
-           key from 0,
-           until: c-finished-state?(coll, c-state, c-limit))
-        if (t-finished-state?(target, t-state, t-limit))
-          // Arghh.  Now things are really grim.
-          target.size := coll.size;
-
-          // We can't continue the iteration on target as we have resized, so
-          // start again, skipping the keys we have already processed.
-          with-fip-of target with prefix t-
-            for (key from 0 below key,
-                 t-state = t-initial-state then t-next-state(target, t-state))
-            finally // Process the remaining keys. We know the target and coll
-              // have the same size so only check the former.
-              for (t-state = t-state then t-next-state(target, t-state),
-                 until: t-finished-state?(target, t-state, t-limit))
-                t-current-element-setter
-                  (fun(c-current-element(coll, c-state)), target, t-state);
-                c-state := c-next-state(coll, c-state);
-              end for
-            end for
-          end
-        else
-          t-current-element-setter
-            (fun(c-current-element(coll, c-state)), target, t-state);
-          t-state := t-next-state(target, t-state)
-        end if
+           t-state = t-initial-state then t-next-state(target, t-state),
+             until: c-finished-state?(coll, c-state, c-limit))
+        t-current-element-setter
+          (fun(c-current-element(coll, c-state)), target, t-state);
       end for
     end
   end;
