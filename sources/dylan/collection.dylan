@@ -548,7 +548,7 @@ define method map-into-rigid-one
     for (key from 0 to max-key,
          state = initial-state then next-state(target, state),
          until: finished-state?(target, state, limit))
-      let val = element(coll, state, default: not-found());
+      let val = element(coll, key, default: not-found());
       unless (not-found?(val))
         current-element(target, state) := fun(val)
       end
