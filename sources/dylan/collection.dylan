@@ -603,11 +603,11 @@ end method map-into-rigid-one;
 define method map-into-rigid-one
     (fun :: <function>, target :: <mutable-collection>, coll :: <array>)
  => (target :: <mutable-collection>);
-  with-fip-of coll /* Use with-setter? */
+  with-fip-of target /* Use with-setter? */
     let end-key = coll.size;
     for (state = initial-state then next-state(target, state),
          until: finished-state?(target, state, limit))
-      let key = current-key(coll, state);
+      let key = current-key(target, state);
       unless (~instance?(key, <integer>) | key < 0 | key >= end-key)
         current-element-setter(fun(coll[key]), target, state)
       end
