@@ -6,6 +6,7 @@ Copyright:    Original Code is Copyright (c) 1995-2004 Functional Objects, Inc.
 License:      See License.txt in this distribution for details.
 Warranty:     Distributed WITHOUT WARRANTY OF ANY KIND
 
+define variable *enable-copy-down* = #f;
 
 define &definition copy-down-method-definer
   { define ?mods:* \copy-down-method ?:name ?signature:* }
@@ -38,6 +39,7 @@ end;
 */
 define function do-define-copy-down-method (fragment, mods, name, signature)
 // format-out ("in do-define-copy-down-method\n");
+  if (*enable-copy-down*)
   let (options, adjectives) = parse-method-adjectives (name, mods);
 //  let signature-and-body = make (<sequence-fragment>,
 //                                 record: signature.fragment-record,
@@ -67,4 +69,7 @@ define function do-define-copy-down-method (fragment, mods, name, signature)
   else
     list (method-definition)
   end
+  else
+    #()
+  end;
 end;
