@@ -1883,9 +1883,9 @@ define method test-tail
   unless (empty?(list))
     let t = tail(list);
     check-true(format-to-string("%s tail", name),
-               instance?(<empty-list>, t) |
-                 instance?(<pair>, t));
-    end unless;
+               instance?(t, <empty-list>) |
+                 instance?(t, <pair>));
+  end unless;
 end method test-tail;
 
 
