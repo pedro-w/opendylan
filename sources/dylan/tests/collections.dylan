@@ -1328,7 +1328,7 @@ define method test-remove!
   name := format-to-string("remove!(%s, ...)", name);
   if (empty?(sequence))
     check-no-condition(name, begin
-                               sequence := remove!(sequence, #t);
+                               sequence := remove!(sequence, 999);
                              end);
     check-true(name, empty?(sequence));
   else
