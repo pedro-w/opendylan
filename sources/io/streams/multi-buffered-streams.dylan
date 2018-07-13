@@ -41,6 +41,7 @@ define function new-stream-id(the-stream :: <multi-buffered-stream>)
 end function;
 
 define constant <buffer-map-entry> = <integer>;
+define constant $default-buffer-map-entry = 0;
 define constant <buffer-map> = limited(<stretchy-vector>, of: <buffer-map-entry>);
 
 define constant $buffer-map-index-size = 24; // TODO: MACHINE INDEP
@@ -78,7 +79,7 @@ define inline function buffer-map-entry-deposit-index
 end function;
 
 define sealed primary class <multi-buffered-stream> (<file-stream>)
-  constant slot buffer-map :: <buffer-map> = make(<buffer-map>);
+  constant slot buffer-map :: <buffer-map> = make(<buffer-map>, fill: $default-buffer-map-entry);
   slot buffer-vector :: <buffer-vector>;
   slot stream-id :: false-or(<integer>);
 end class;
