@@ -110,6 +110,7 @@ end method reverse;
 define class <object-deque> (<deque>, <limited-collection>)
   slot representation :: <island-deque>,
     init-value: make(<island-deque>);
+  slot element-fill :: <object>;
 end class <object-deque>;
 
 
@@ -166,8 +167,12 @@ end class <island-deque>;
 define method initialize (deque :: <object-deque>, #key size = 0, fill)
   next-method();
   check-nat(size);
+  if (size > 0)
+    check-type(fill, element-type(deque));
+  end;
+  deque.element-fill := fill;
   let data-size = max(size * 2, $minimum-island-deque-data-size);
-  let rep = make(<island-deque>, size: data-size, fill: #f);
+  let rep = make(<island-deque>, size: data-size, fill: fill);
   let rep-first-index = truncate/(data-size, 2);
   let rep-last-index = rep-first-index + size - 1;
   if (fill)
@@ -236,7 +241,7 @@ define sealed inline method trusted-size-setter
       end;
     difference > 0 =>
       for (i :: <integer> from 0 below difference)
-        trusted-push-last(collection, #f)
+        trusted-push-last(collection, element-fill(collection))
       end;
   end case;
   new-size
@@ -248,8 +253,8 @@ define sealed method size-setter (new-size :: <integer>, collection :: <object-d
   check-nat(new-size);
   let size = size(collection);
   unless (new-size <= size)
-    // expected to fail when #f is incompatible with element-type
-    check-type(#f, element-type(collection))
+    // expected to fail when fill is incompatible with element-type
+    check-type(element-fill(collection), element-type(collection))
   end unless;
   trusted-size(collection) := new-size;
 end method size-setter;
@@ -408,7 +413,7 @@ define method grow! (deque :: <object-deque>)
   let old-rep-first-index = old-rep.first-index;
   let old-rep-last-index = old-rep.last-index;
   let old-rep-size = (old-rep-last-index - old-rep-first-index) + 1;
-  let new-rep = make(<island-deque>, size: old-rep-size * 2, fill: #f);
+  let new-rep = make(<island-deque>, size: old-rep-size * 2, fill: element-fill(deque));
   new-rep.first-index := truncate/(old-rep-size, 2);
   for (src-index :: <integer>
          from old-rep-first-index to old-rep-last-index,
@@ -631,7 +636,7 @@ define sealed method copy-sequence
     let rep-first-index = rep.first-index;
     let rep-last-index = rep.last-index;
     let deque-size = (rep-last-index - rep-first-index) + 1;
-    let target = make(<object-deque>, size: deque-size, element-type: element-type(source));
+    let target = make(<object-deque>, size: deque-size, element-type: element-type(source), fill: element-fill(source));
     let target-rep = target.representation;
     for (from :: <integer> from rep-first-index to rep-last-index,
          to :: <integer> from target-rep.first-index to target-rep.last-index)
