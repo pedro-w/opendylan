@@ -389,9 +389,9 @@ define sealed method remove!
 end method remove!;
 
 define sealed method remove!
-    (range :: <infinite-range>, elt :: <number>, #key test, count) => (result :: <sequence>)
-  //--- What about 'test'?
-  unless (elt = range.range-from)
+  (range :: <infinite-range>, elt :: <number>, #key test, count) => (result :: <sequence>)
+  test := test | \=;
+  unless (test(elt, range.range-from))
     error(make(<incompatible-range-error>,
                format-string: "You can't remove %= from the infinite range %=",
                format-arguments: list(elt, range)))
@@ -405,10 +405,10 @@ end method remove!;
 
 define sealed method remove!
     (range :: <constant-range>, elt :: <number>, #key test, count) => (result :: <sequence>)
-  //--- What about 'test'?
   if (~count | count > 0)
+    test := test | \=;
     case
-      (elt = range.range-from) =>
+      test(elt, range.range-from) =>
         if (range.size)
           range.size := range.size - 1
         end if;
@@ -416,7 +416,7 @@ define sealed method remove!
       (range.size = 1) =>
         $empty-range;
       otherwise =>
-        if (member?(elt, range))
+        if (member?(elt, range, test: test))
           remove!(shallow-copy(range), elt, test: test, count: count)
         else
           range
@@ -428,26 +428,39 @@ define sealed method remove!
 end method remove!;
 
 define sealed method remove!
-    (range :: <finite-range>, elt :: <number>, #key test, count) => (result :: <sequence>)
-  //--- What about 'test'?
-  if (~count | count > 0)
-    case
-      (range.size = 1 & elt = range.range-from) =>
-        $empty-range;
-      (elt = range.last) =>
-        range.size := range.size - 1;
-        range;
-      (elt = range.range-from) =>
-        range.size := range.size - 1;
-        range.range-from := range.range-from + range.range-by;
-        range;
-      otherwise =>
-        if (count & count > 0 & member?(elt, range))
-          remove!(shallow-copy(range), elt, test: test, count: count)
-        else
-          range
-        end if;
-    end case;
+  (range :: <finite-range>, elt :: <number>, #key test, count) => (result :: <sequence>)
+  test := test | \=;
+  local method remove-start(range, count)
+          if ((~count | count > 0) &
+                test(elt, range.range-from))
+            range.size := range.size - 1;
+            range.range-from := range.range-from + range.range-by;
+            if (range.size > 0)
+              remove-start(range, count & (count - 1))
+            else
+              values($empty-range, 0)
+            end
+          else
+            values(range, count)
+          end
+        end;
+  local method remove-end(range, count)
+          if ((~count | count > 0) &
+                test(elt, range.last))
+            range.size := range.size - 1;
+            if (range.size > 0)
+              remove-end(range, count & (count - 1))
+            else
+              values($empty-range, 0)
+            end
+          else
+            values(range, count)
+          end
+        end;
+  let (range, count) = remove-start(range, count);
+  let (range, count) = remove-end(range, count);
+  if ((~count | count > 0) & member?(elt, range, test: test))
+    remove!(shallow-copy(range), elt, test: test, count: count)
   else
     range
   end if;
