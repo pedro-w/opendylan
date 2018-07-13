@@ -18,9 +18,7 @@ define method initialize
           element-type :: <type>, fill =  #f)
  => ()
   next-method();
-  unless (size = 0)
-    check-type(fill, element-type);
-  end unless;
+  check-type(fill, element-type);
   stretchy-initialize(vector, capacity, size, fill);
   vector
 end method initialize;
