@@ -33,8 +33,9 @@ define test ipv4-numeric-address-test ()
 end test;
 
 define test ipv6-address-test (expected-failure?: #t)
-  let address = make(<internet-address>, address: "::1");
-  assert-equal("::1", host-address(address));
+  let address = "";
+  assert-no-errors(address := make(<internet-address>, address: "::1"));
+  assert-equal("::1", host-address(address))
 end test;
 
 define function tcp-server-one-shot ()
