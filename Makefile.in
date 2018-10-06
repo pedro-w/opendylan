@@ -459,7 +459,8 @@ CHECK_APPS = \
 	command-line-parser-test-suite-app \
 	logging-test-suite-app \
 	regular-expressions-test-suite \
-	hash-algorithms-test
+	hash-algorithms-test \
+	network-test
 
 CHECK_ENV = \
 	OPEN_DYLAN_TARGET_PLATFORM=$(OPEN_DYLAN_TARGET_PLATFORM) \
