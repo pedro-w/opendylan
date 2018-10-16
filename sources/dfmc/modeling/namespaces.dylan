@@ -1209,7 +1209,6 @@ define &module dylan-c-ffi-hygiene-glitches
     <raw-struct-type>,
     <raw-union-type>,
     <c-callable-function>,
-    <c-statically-typed-function-pointer>,
     <c-pointer-type-class>;
 
   create
