@@ -103,6 +103,37 @@ define inline-only function c-float-cast
   end select;
 end function;
 
+// !@#$ Work-around for bug #1254 in decode-float - becomes active when bootstrapping from 2019.1
+// In the future remove *bad-decode-float* and %decode-float, change print-raw-object
+// to call decode-float directly
+define constant *bad-decode-float* :: <boolean> = decode-float(10.0d0) > 1.0d0;
+
+define function %decode-float(x :: <float>) => (significand :: <float>,
+						exponent :: <integer>,
+						sign :: <float>)
+  if (*bad-decode-float* & instance?(x, <double-float>))
+    if (zero?(x))
+      values(0.0d0, 0, 1.0d0);
+    else
+      let (l :: <raw-machine-word>, h :: <raw-machine-word>)
+	= primitive-cast-double-float-as-machine-words(primitive-double-float-as-raw(x));
+      let low = primitive-wrap-machine-word(l);
+      let raw-exponent = as(<integer>, %logand(u%shift-right(low, 52), #x7FF));
+      if (zero?(raw-exponent))
+	error("Cannot decode subnormal numbers");
+      end;
+      let sign :: <double-float> = if (%logbit?(63, low)) -1.0d0 else 1.0d0 end;
+      let raw-sig = %logior(%logand(low, #x000FFFFFFFFFFFFF), #x3FE0000000000000);
+      let significand :: <double-float> = primitive-raw-as-double-float
+	(primitive-cast-machine-words-as-double-float(primitive-unwrap-machine-word(raw-sig),
+						      h));
+      values(significand, raw-exponent - #x3FE, sign)
+    end;
+  else
+    decode-float(x)
+  end if;
+end function;
+
 define method print-raw-object
     (x :: <float>, stream :: <stream>) => ()
   write(stream, c-float-cast(x));
@@ -114,8 +145,7 @@ define method print-raw-object
       write(stream, "INFINITY");
     #"nan" => write(stream, "NAN");
     otherwise =>
-      let (significand, exponent, signum) = decode-float(x);
-      let one = as(object-class(x), 1);
+      let (significand, exponent, signum) = %decode-float(x);
       if (negative?(signum))
 	write-element(stream, '-');
       end if;
@@ -123,13 +153,13 @@ define method print-raw-object
       until (zero?(significand))
 	// Extract 4 bits (i.e. one hex digit) at a time
 	let x = scale-float(significand, 4);
-	let (quot, rem) = truncate/(x, one);
+	let (quot, rem) = truncate(x);
 	significand := rem;
 	let i = as(<integer>, quot);
 	write-element(stream, xdigits[i]);
       end until;
       format(stream, "p%d", exponent);
-  end;
+  end select;
 end method print-raw-object;
 
 // INTEGERS

@@ -7,6 +7,7 @@ Warranty:     Distributed WITHOUT WARRANTY OF ANY KIND
 define library dfmc-c-back-end
   use big-integers;
   use common-dylan;
+  use dylan;
   use io;
   use dfmc-core;
   use dfmc-back-end;
@@ -21,6 +22,8 @@ define module dfmc-c-back-end
   use big-integers, prefix: "generic-";
   use common-dylan;
   use format;
+  use dylan-primitives;
+  use machine-words;
   use streams-internals;
   use dfmc-core;
   use dfmc-imports;
