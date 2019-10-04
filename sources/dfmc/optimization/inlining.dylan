@@ -311,13 +311,12 @@ define method find-copy-downable-methods
          source-location: m.model-source-location);
   end;
   // Lose all methods that are known statically always to be more
-  // specific than ourselves, leaving only methods known to be
-  // less specific and those that are potentially more or less
-  // specific.
+  // specific than ourselves and those that are potentially more or less
+  // specific, leaving only methods known to be less specific.
   let methods
     = choose(method (them :: <&method>)
                them == m
-                 | ~guaranteed-method-precedes?(them, m, req-te*)
+                 | guaranteed-method-precedes?(m, them, req-te*)
              end method,
              methods-known);
   guaranteed-sorted-applicable-methods(methods, req-te*);
