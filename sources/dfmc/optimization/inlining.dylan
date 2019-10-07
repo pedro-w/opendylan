@@ -310,15 +310,16 @@ define method find-copy-downable-methods
          meth: m,
          source-location: m.model-source-location);
   end;
-  // Lose all methods that are known statically always to be more
-  // specific than ourselves and those that are potentially more or less
-  // specific, leaving only methods known to be less specific.
+  // Keep only methods whose specializers are all less specific than this one.
+  local method applicable?(candidate :: <&method>) => (well? :: <boolean>)
+          ~instance?(candidate, <&copy-down-method>) &
+            every?(guaranteed-preceding-specializer?,
+                   ^function-specializers(m),
+                   ^function-specializers(candidate),
+                   req-te*)
+        end;
   let methods
-    = choose(method (them :: <&method>)
-               them == m
-                 | guaranteed-method-precedes?(m, them, req-te*)
-             end method,
-             methods-known);
+    = choose(applicable?, methods-known);
   guaranteed-sorted-applicable-methods(methods, req-te*);
 end method;
 
