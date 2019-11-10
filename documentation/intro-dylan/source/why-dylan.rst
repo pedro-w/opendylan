@@ -128,7 +128,7 @@ All of these features will be explained in greater detail later on.
 Garbage Collection
 ==================
 
-Languages with :term:`garbage collection` have no need of a ``free`` or
+Languages with :term:`garbage` collection have no need of a ``free`` or
 ``delete`` operator, because unused heap memory gets reclaimed automatically
 by the language runtime. This reduces the complexity of source code,
 eliminates the need of keeping reference counts for shared objects,

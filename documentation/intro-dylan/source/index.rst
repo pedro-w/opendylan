@@ -23,4 +23,5 @@ DRM, although it refers to the latter book frequently.
    multiple-dispatch
    modules-libraries
    conditions
+   glossary
    copyright
