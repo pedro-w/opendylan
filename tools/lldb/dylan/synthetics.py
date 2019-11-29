@@ -1,5 +1,5 @@
 import lldb
-from accessors import *
+from dylan.accessors import *
 
 class SyntheticHideChildren(object):
   """A synthetic that shows no children."""
