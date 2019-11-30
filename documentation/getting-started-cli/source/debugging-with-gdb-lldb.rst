@@ -39,7 +39,34 @@ presence of inlined functions and macro expansions.
 Understanding name mangling
 ---------------------------
 
-*Fill this in, particularly with a link to the Hacker's Guide!*
+Dylan identifiers (method and variable names) do not follow the same
+rules as C; they are case insensitive, can contain extra characters
+such as '<' or '-', and are part of the two-level namespace (module
+and library). There is a process, known as 'mangling', to turn Dylan
+identifiers into valid C identifiers. The reverse process is called
+demangling. C++ also mangles its variable and function names, for the
+same reason. When debugging, backtraces and frame summaries will show
+the mangled names rather than the Dylan names. An outline of the
+mangling rules is as follows:
+
+* Convert identifier to lower case
+* Replace incompatible symbols.
+  For example, ``-`` becomes ``_`` and ``<`` becomes ``L``.
+* Repeat for module and library identifiers
+* Join them like this: ``K`` identifier ``Y`` module ``V`` library.
+* If it is a method, append a suffix starting with ``M`` to distinguish the
+  specific methods within a generic function.
+
+There are a number of extra cases to shorten the mangled name. The ``Y``
+and module name are omitted if the module name is the same as the
+library. For modules in the Dylan library, the sequence
+``YmoduleVdylan`` is replaced by ``VKmodule`` and some modules have short
+names, for example ``i`` is the 'internal' module.
+
+For example, method ``format-err`` in the ``format-out`` module of the
+``io`` library becomes ``Kformat_errYformat_outVioMM0I``.
+
+For full details, see `the Hacker's guide <https://opendylan.org/documentation/hacker-guide/runtime/mangling.html?highlight=mangling>`_.
 
 Understanding stack traces
 --------------------------
