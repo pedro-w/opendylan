@@ -1,7 +1,7 @@
-import lldb
 import argparse
 import shlex
 
+import lldb
 from dylan import utils
 from dylan import mangling
 from dylan.accessors import *
@@ -82,12 +82,12 @@ using this command
       (binding, module, library) = utils.parse_binding(arg)
       symbol_name = mangling.dylan_mangle_binding(binding, module, library)
     except utils.InvalidBindingIdentifier:
-      print ('Invalid binding name: %s' % arg)
+      print('Invalid binding name: %s' % (arg,))
       continue
-    expression = '(dylan_value)&%s' % symbol_name
+    expression = '(dylan_value)&%s' % (symbol_name,)
     gf = target.CreateValueFromExpression(symbol_name, expression)
     if gf.GetError().Fail():
-      print ("No generic function %s was found." % (arg))
+      print("No generic function %s was found." % (arg,))
       continue
     methods = dylan_generic_function_methods(gf)
     ieps = [dylan_method_iep_function(m) for m in methods]
@@ -96,4 +96,4 @@ using this command
     # bindings for SBTarget::BreakpointCreateByNames().
     for iep in ieps:
       target.BreakpointCreateByName(iep.name)
-    print ("Set breakpoints on %d entry points." % len(ieps))
+    print("Set breakpoints on %d entry points." % (len(ieps),))

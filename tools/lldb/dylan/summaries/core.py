@@ -57,7 +57,7 @@ def format_machine_word_value(value):
     fmt = "%#018x"
   else:
     fmt = "%#x"
-  return fmt % value
+  return fmt % (value,)
 
 @summaries.register('<machine-word>', 'dylan-extensions', 'dylan')
 def dylan_machine_word_summary(value, internal_dict):

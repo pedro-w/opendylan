@@ -6,7 +6,7 @@ def llvm_array_type_summary(value, internal_dict):
   size_value = dylan_slot_element_by_name(value, 'llvm-array-type-size')
   size = dylan_integer_value(size_value)
   element_type = dylan_slot_element_by_name(value, 'llvm-array-type-element-type')
-  return '[%d x %s]' % size, summaries.summary(element_type)
+  return '[%d x %s]' % (size, summaries.summary(element_type))
 
 @summaries.register('<llvm-function-type>', 'llvm', 'llvm')
 def llvm_function_type_summary(value, internal_dict):
@@ -74,4 +74,4 @@ def llvm_vector_type_summary(value, internal_dict):
   size_value = dylan_slot_element_by_name(value, 'llvm-vector-type-size')
   size = dylan_integer_value(size_value)
   element_type = dylan_slot_element_by_name(value, 'llvm-vector-type-element-type')
-  return '[%d x %s]' % size, summaries.summary(element_type)
+  return '[%d x %s]' % (size, summaries.summary(element_type))

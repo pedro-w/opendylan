@@ -3,9 +3,9 @@ Contains routines to work with Dylan objects obtained from
 LLDB's SBValue objects
 """
 
-import lldb
 import struct
 import array
+import lldb
 from dylan.mangling import dylan_mangle_wrapper
 
 OBJECT_TAG = 0
@@ -149,8 +149,7 @@ def dylan_is_false(value):
   """Return True if this value is #f"""
   target = lldb.debugger.GetSelectedTarget()
   address = lldb.SBAddress(value.GetValueAsUnsigned(), target)
-  if address.symbol.name == 'KPfalseVKi':
-    return True
+  return address.symbol.name == 'KPfalseVKi'
 
 def dylan_is_list(value):
   """Return True if this value is a list (i.e., an instance of <pair>)"""
@@ -389,12 +388,12 @@ def dylan_string(value):
     data = dylan_unicode_string_data(value)
     intsize = value.GetTarget().GetAddressByteSize()
     if intsize == 8:
-      format = 'Q'
+      data_format = 'Q'
     elif intsize == 4:
-      format = 'L'
+      data_format = 'L'
     else:
       raise Exception("Unsupported character size")
-    return ''.join((chr(x) for x in array.array(format, data)))
+    return ''.join((chr(x) for x in array.array(data_format, data)))
   else:
     raise Exception("%s is a new type of string? %s" % (value, class_name))
   

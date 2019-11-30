@@ -48,10 +48,10 @@ def dylan_object_summary(value, internal_dict):
     if summary is not None:
       return '{%s: %s}' % (class_name, summary)
     else:
-      return '{%s}' % class_name
+      return '{%s}' % (class_name,)
   else:
     try:
-      return '{%s}' % dylan_object_class_name(value)
+      return '{%s}' % (dylan_object_class_name(value),)
     except:
       return '{uninitialized}'
 
@@ -60,15 +60,15 @@ def dylan_byte_character_summary(value, internal_dict):
   if byte_character.isprintable():
     return '{<byte-character>: %s (0x%x)}' % (byte_character, ord(byte_character))
   else:
-    return '{<byte-character>: (0x%x)}' % (ord(byte_character))
+    return '{<byte-character>: (0x%x)}' % (ord(byte_character),)
 
 def dylan_integer_summary(value, internal_dict):
-  return '{<integer>: %s}' % dylan_integer_value(value)
+  return '{<integer>: %s}' % (dylan_integer_value(value),)
 
 def dylan_unicode_character_summary(value, internal_dict):
   try:
     unicode_character = dylan_unicode_character_value(value)
-    return '{<unicode-character>: %s}' % unicode_character
+    return '{<unicode-character>: %s}' % (unicode_character,)
   except ValueError:
     return '{<unicode-character> (invalid)}'
 

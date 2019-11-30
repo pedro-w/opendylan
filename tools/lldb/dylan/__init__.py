@@ -29,7 +29,7 @@ from dylan.summaries import testworks
 def __lldb_init_module(debugger, internal_dict):
   def cmd(name):
     pyname = name.replace("-", "_")
-    helptext = "For more information run '%s -h'" % (name)
+    helptext = "For more information run '%s -h'" % (name,)
     return 'command script add -f dylan.commands.%s %s --help "%s"' % (pyname, name, helptext)
   debugger.HandleCommand(cmd('dylan-break-gf'))
   debugger.HandleCommand(cmd('dylan-bt'))
