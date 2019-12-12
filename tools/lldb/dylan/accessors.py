@@ -39,6 +39,13 @@ UNICODE_STRING_DATA = 1
 CLASS_SLOT_NAMES_CACHE = {}
 """Map of wrapper address to list of slot names"""
 
+# Compatibility for 2.7/3
+try:
+  unichr
+except NameError:
+  unichr = chr
+  xrange = range
+
 def ensure_value_class(value, class_name, module, library):
   """Raise an exception if the value is not a member of the given class"""
   wrappersym = dylan_object_wrapper_symbol_name(value)
@@ -64,9 +71,10 @@ def dylan_boolean_value(value):
 def dylan_byte_character_value(value):
   """Return value as a character"""
   byte_value = value.GetValueAsUnsigned() >> 2
-  if byte_value < 0 or byte_value > 255:
-    return chr(0)
-  return chr(byte_value)
+  if 0 <= byte_value < 255:
+    return chr(byte_value)
+  else:
+    return '?'
 
 def dylan_byte_string_data(value):
   """Return raw data from a <byte-string> value as a bytes object"""
@@ -387,17 +395,25 @@ def dylan_string_data(value):
 def dylan_string(value):
   """Assuming value is a Dylan string, return it as a Python str"""
   if dylan_is_byte_string(value):
-    return str(dylan_byte_string_data(value), 'utf-8')
+    return dylan_byte_string_data(value).decode('utf-8')
   elif dylan_is_unicode_string(value):
     data = dylan_unicode_string_data(value)
-    intsize = value.GetTarget().GetAddressByteSize()
-    if intsize == 8:
-      data_format = 'Q'
-    elif intsize == 4:
-      data_format = 'L'
+    int_size = value.GetTarget().GetAddressByteSize()
+    if int_size == 8:
+      data_format = '=Q'
+    elif int_size == 4:
+      data_format = '=L'
     else:
       raise Exception("Unsupported character size")
-    return ''.join((chr(x) for x in array.array(data_format, data)))
+    s = u''
+    for i in xrange(0, len(data), int_size):
+      c = struct.unpack_from(data_format, data, i)
+      c = c[0] >> 2
+      if 0 < c < 0x1FFFFF:
+        s += unichr(c)
+      else:
+        s += '?'
+    return s
   else:
     raise Exception("%s is a new type of string? %s" % (value, class_name))
   
@@ -411,15 +427,15 @@ def dylan_unicode_character_value(value):
   """Return a value as a chr"""
   codepoint = value.GetValueAsUnsigned() >> 2
   # May raise here if not valid unicode, will handle it later
-  return chr(codepoint)
+  return unichr(codepoint)
 
 def dylan_unicode_string_data(value):
   """Return a value as a bytes object"""
   ensure_value_class(value, '<unicode-string>', 'dylan', 'dylan')
   size = dylan_integer_value(dylan_slot_element(value, UNICODE_STRING_SIZE))
   # Dylan's <unicode-character> is the same as <integer> hence is pointer-sized
-  intsize = value.GetTarget().GetAddressByteSize()
-  return dylan_read_raw_data(value, UNICODE_STRING_DATA, size * intsize)
+  int_size = value.GetTarget().GetAddressByteSize()
+  return dylan_read_raw_data(value, UNICODE_STRING_DATA, size * int_size)
 
 def dylan_sequence_empty(sequence):
   """Return True if sequence is empty"""
