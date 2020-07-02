@@ -11,8 +11,6 @@ Environment Protocols Module Classes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - :class:`<server>`
-- :class:`<closed-server-error>`
-- :class:`<invalid-object-error>`
 - :class:`<id>`
 - :class:`<library-id>`
 - :class:`<module-id>`
@@ -33,6 +31,8 @@ Environment Protocols Module Classes
 - :class:`<data-display-size>`
 - :class:`<address-object>`
 - :class:`<register-category>`
+..
+   done to here
 - :class:`<register-object>`
 - :class:`<component-object>`
 - :class:`<application-and-compiler-object>`
@@ -132,17 +132,6 @@ Environment Protocols Module Classes
 
    :superclasses: :drm:`<object>`
 
-.. class:: <closed-server-error>
-
-   :superclasses: :class:`<simple-error>`
-
-.. class:: <invalid-object-error>
-
-   :superclasses: :class:`<simple-error>`
-
-   :keyword project: an instance of :class:`<project-object>`. Required.
-   :keyword object: an instance of :class:`<environment-object>`. Required.
-
 .. class:: <id>
    :abstract:
 
@@ -197,6 +186,121 @@ Environment Protocols Module Classes
 
       An identifier for a method.   
 
+.. class:: <compiler-object>
+
+   :superclasses: :class:`<environment-object>`
+
+   :keyword compiler-object-proxy: an instance of :drm:`<object>`. Required. 
+
+.. class:: <address-object>
+
+   :superclasses: :class:`<application-object>`
+
+.. class:: <object-location-id>
+
+   :superclasses: :class:`<id>`
+
+   :keyword filename: an instance of :class:`<file-locator>`. Required.
+   :keyword line-number: an instance of :drm:`<integer>`. Required.
+   
+.. class:: <library-object-location-id>
+
+   :superclasses: :class:`<object-location-id>`
+
+   :keyword filename: an instance of :class:`<file-locator>`. Required.
+   :keyword line-number: an instance of :drm:`<integer>`. Required.
+   :keyword library: an instance of :class:`<library-id>`. Required.
+
+.. class:: <environment-object>
+   :abstract:
+   :primary:
+
+   :superclasses: :drm:`<object>`
+
+   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
+
+.. class:: <environment-object-with-id>
+   :primary:
+
+   :superclasses: :class:`<environment-object>`
+
+   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
+   :keyword id: an instance of :class:`false-or(<id-or-integer>) <<id-or-integer>>`. Required.
+
+.. class:: <environment-object-with-library>
+   :open:
+   :abstract:
+
+   :superclasses: :class:`<environment-object>`
+
+   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
+   :keyword library: an instance of :class:`<library-object>`. Required.
+
+.. class:: <environment-options>
+
+   :superclasses: :class:`<environment-object>`
+
+.. class:: <compiler-object>
+   :abstract:
+   :sealed:
+
+   :superclass: :class:`<environment-object>`
+
+   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
+   :keyword compiler-object-proxy: an instance of :drm:`<object>`. Required.
+
+.. class:: <application-object>
+   :abstract:
+   :sealed:
+   :primary:
+
+   :superclass: :class:`<environment-object>`
+
+   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
+   :keyword application-object-proxy: an instance of :drm:`<object>`.
+
+.. class:: <application-code-object>
+   :abstract:
+   :sealed:
+
+   :superclass: :class:`<application-object>`
+
+   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
+   :keyword application-object-proxy: an instance of :drm:`<object>`.
+
+.. class:: <unbound-object>
+
+   :superclass: :class:`<application-object>`
+
+   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
+   :keyword application-object-proxy: an instance of :drm:`<object>`.
+
+.. class:: <register-object>
+
+   :superclass: :class:`<application-object>`
+
+   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
+   :keyword application-object-proxy: an instance of :drm:`<object>`.   
+
+Environment Protocol Module Conditions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- :class:`<closed-server-error>`
+- :class:`<invalid-object-error>`
+
+.. class:: <closed-server-error>
+
+   :superclasses: :class:`<simple-error>`
+
+.. class:: <invalid-object-error>
+
+   :superclasses: :class:`<simple-error>`
+
+   :keyword project: an instance of :class:`<project-object>`. Required.
+   :keyword object: an instance of :class:`<environment-object>`. Required.
+
+
+
 Environment Protocols Module Generics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -241,3 +345,41 @@ Environment Protocols Module Generics
 
 Environment Protocols Module Methods
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Environment Protocols Module Constants
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. constant:: <address-display-format>
+
+   :description: One of ``#"octal"``, ``#"decimal"`` or ``#"hexadecimal"``.
+
+.. constant:: <data-display-format>
+
+   :description: One of ``#"octal"``, ``#"decimal"``, ``#"hexadecimal"``, 
+      ``#"byte-character"``, ``#"unicode-character"``, ``#"single-float"``
+      or ``#"double-float"``.
+
+.. constant:: <data-display-size>
+
+   :description: One of
+
+      * ``#"byte"``  - 8-bit value 
+      * ``#"short"`` - 16-bit value 
+      * ``#"long"``  - 32-bit value 
+      * ``#"hyper"`` - 64-bit value 
+      * ``#"float"`` - Single-precision floating-point value 
+      * ``#"double"`` -Double-precision floating-point value 
+
+.. constant:: $invalid-address-object
+
+   :description: an instance of :class:`<address-object>`
+      which is used only to indicate a failing result or argument
+
+.. constant:: <id-or-integer>
+
+   :description: a type union of :class:`<id>` and :drm:`<integer>`.
+
+.. constant:: <register-category> 
+   :description: one of ``#"general-purpose"``,
+         ``#"special-purpose"``,
+         or ``#"floating-point"``.
