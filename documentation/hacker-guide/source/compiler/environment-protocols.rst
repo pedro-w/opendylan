@@ -231,7 +231,7 @@ Environment Objects
 
 .. generic-function:: note-object-properties-changed
 
-   :signature: *project*, *object*, *type* => ()
+   :signature: note-object-properties-changed *project*, *object*, *type* => ()
 
    :parameter: project: an instance of :class:`<project-object>`
    :parameter: object: an instance of :class:`<environment-object>`
@@ -240,7 +240,7 @@ Environment Objects
 .. generic-function:: environment-object-id
    :open:
 
-   :signature: *server*, *object* => *id*
+   :signature: environment-object-id *server*, *object* => *id*
 
    :parameter: server: an instance of :class:`<server>`
    :parameter: object: an instance of :class:`<environment-object>`
@@ -250,12 +250,152 @@ Environment Objects
 .. generic-function:: environment-object-exists?
    :open:
 
-   :signature: *server*, *object* => *exists?*
+   :signature: environment-object-exists? *server*, *object* => *exists?*
 
    :parameter: server: an instance of :class:`<server>`
    :parameter: object: an instance of :class:`<environment-object>`
 
    :return: exists?: an instance of :drm:`<boolean>`   
+
+.. generic-function:: environment-object-primitive-name
+   :open:
+
+   :signature: environment-object-primitive-name *server*, *object* => *name*
+
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+
+   :return: name: an instance of :drm:`false-or(<string>) <<string>>`
+
+.. generic-function:: get-environment-object-primitive-name
+   :open:
+
+   :signature: get-environment-object-primitive-name *server*, *object* => *name*
+
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+   :return: name: an instance of :drm:`false-or(<string>) <<string>>`
+
+.. generic-function:: environment-object-library
+   :open:
+
+   :signature: environment-object-library *server*, *object* => *library*
+
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+   :return: library: an instance of :class:`false-or(<library-object>) <<library-object>>`
+
+
+.. generic-function:: environment-object-basic-name
+   :open:
+
+   :signature: environment-object-basic-name *server*, *object* ``#key`` ``#all-keys`` => name
+
+   :parameter: server:  an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+
+   :return: name:  an instance of :drm:`false-or(<string>) <<string>>`
+
+.. generic-function:: environment-object-display-name
+   :open:
+
+   :signature: environment-object-display-name *server*, *object*, *namespace* ``#key`` ``#all-keys`` => name
+
+   :parameter: server:  an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter: namespace: an instance of :class:`false-or(<namespace-object> <<namespace-object>>`
+
+   :return: name:  an instance of :drm:`false-or(<string>) <<string>>`
+
+.. generic-function:: environment-object-unique-name
+   :open:
+
+   :signature: environment-object-unique-name *server*, *object*, *namespace* ``#key`` ``#all-keys`` => name
+
+   :parameter: server:  an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter: namespace: an instance of :class:`false-or(<namespace-object> <<namespace-object>>`
+
+   :return: name:  an instance of :drm:`false-or(<string>) <<string>>`
+
+.. generic-function:: environment-object-type
+   :open:
+
+   :signature: environment-object-type *server*, *object* => *type*
+   :parameter: server:  an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+
+   :return: type: an instance of :class:`<environment-object>`
+
+.. generic-function:: environment-object-type-name
+   :open:
+
+   :signature: environment-object-type-name *object* => *type*
+   :parameter: object: an instance of :class:`<environment-object>`
+
+   :return: type-name: an instance of :drm:`<string>`
+
+.. generic-function:: environment-object-source
+   :open:
+
+   :signature: environment-object-source *server*, *object* => *source*
+
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+
+   :return: source: an instance of :drm:`false-or(<string>) <<string>>`
+
+.. generic-function:: environment-object-source-location
+   :open:
+
+   :signature: environment-object-source-location *server*, *object* => *location*
+
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+
+   :return: location: an instance of :class:`false-or(<source-location>) <<source-location>>`
+
+.. generic-function:: environment-object-home-server?
+
+   Note there is no generic function actually defined in this module.
+
+   :signature: environment-object-home-server? *server*, *object* => *home?*
+   :parameter: server: an instance of :drm:`<object>`
+   :parameter: object: an instance of :drm:`<object>`
+
+   :return: home?: an instance of :drm:`<boolean>`
+
+.. generic-function:: environment-object-home-name
+   :open:
+
+   :signature: environment-object-home-name     *server*, *object* => *name*
+
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+
+   :return: name: an instance of :class:`false-or(<name-object>) <<<name-object>>`
+
+.. generic-function:: environment-object-name
+   :open:
+
+   :signature: environment-object-name     *server*, *object*, *namespace* => *name*
+
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter: namespace: an instance of :class:`<namespace-object>`
+
+   :return: name: an instance of :class:`false-or(<name-object>) <<<name-object>>`
+
+.. generic-function:: source-location-environment-object
+   :open:
+
+   :signature: source-location-environment-object *server* *location* => *object*
+
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: location: an instance of :class:`<source-location>`
+
+   :return: object: an instance of :class:`false-or(<environment-object>) <<environment-object>>`
+
 
 Environment options
 ^^^^^^^^^^^^^^^^^^^
