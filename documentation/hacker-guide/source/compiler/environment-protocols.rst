@@ -396,6 +396,67 @@ Environment Objects
 
    :return: object: an instance of :class:`false-or(<environment-object>) <<environment-object>>`
 
+.. generic-function:: find-environment-object
+   :open:
+
+   Find an environment object by name or id
+
+   :signature: find-environment-object *server*, *name* ``#key`` ``#all-keys`` => object
+
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: name: an instance of :drm:`<string>` or :class:`<id-or-integer>`
+
+   :return: object: an instance of :class:`false-or(<environment-object>) <<environment-object>>`
+
+.. generic-function:: make-environment-object
+   :sealed:
+
+   :signature: make-environment-object *class* ``#key`` *project* *library* *id* *application-object-proxy* *compiler-object-proxy* => *object*
+
+   :parameter: class: a instance of :drm:`<class>`, a subclass of :class:<environment-object>
+   :key: project: an instance of :class:`<project-object>`
+   :key: library: an instance of :class:`false-or(<library-object>) <<library-object>>`
+   :key: id: an instance of :class:`false-or(<id-or-integer>) <<id-or-integer>>`
+   :key: application-object-proxy: an instance of :drm:`<object>`
+   :key: compiler-object-proxy: an instance of :drm:`<object>`
+
+   :return: object: an instance of :class:`<environment-object>`
+
+.. generic-function:: parse-environment-object-name
+   :sealed:
+
+   :signature: parse-environment-object-name *name* ``#key`` ``#all-keys`` => id
+
+   :parameter: name: an instance of :drm:`<string>`
+
+   :return: id: an instance of :class:`false-or(<id-or-integer>)<<id-or-integer>>`
+
+.. generic-function:: parse-module-name
+
+   :signature: parse-module-name *name* ``#key`` *library* => id
+
+   :parameter: name: an instance of :drm:`<string>`
+   :key: library: an instance of :class:`false-or(<library-id>) <<library-id>>`
+
+   :return: id: an instance of :class:`false-or(<module-id>) <<module-id>>`
+
+.. generic-function:: print-environment-object
+   :open:
+
+   :signature: print-environment-object *stream*, *server*, *object* ``#key`` ``#all-keys`` => ()
+
+   :parameter: stream: an instance of :class:`<stream>`
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
+
+.. generic-function:: print-environment-object-name
+   :open:
+
+   :signature: print-environment-object-name *stream*, *server*, *object* ``#key`` ``#all-keys`` => ()
+
+   :parameter: stream: an instance of :class:`<stream>`
+   :parameter: server: an instance of :class:`<server>`
+   :parameter: object: an instance of :class:`<environment-object>`
 
 Environment options
 ^^^^^^^^^^^^^^^^^^^
