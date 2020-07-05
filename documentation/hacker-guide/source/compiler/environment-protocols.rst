@@ -2,8 +2,9 @@
 Environment Protocols
 *********************
 
-.. current-library:: environment-protocols
-.. current-module:: environment-protocols
+.. library:: environment-protocols
+
+.. module:: environment-protocols
 
 This is information about environment protocols.
 
@@ -45,17 +46,17 @@ Server Objects
    :open:
 
    :signature: *server*, *client*, *object*, *type*  => ();
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: client: an instance of :drm:`<object>`
-   :parameter: object: an instance of :drm:`<object>`
-   :parameter: type:  an instance of :type:`<query-type>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter client: an instance of :drm:`<object>`
+   :parameter object: an instance of :drm:`<object>`
+   :parameter type:  an instance of :type:`<query-type>`
 
 .. generic-function:: server-project
    :open:
 
-   :signature: *server* => *project* 
-   :parameter: server: an instance of :class:`<server>`
-   :returns: project: an instance of :class:`<project-object>`
+   :signature: *server* => *project*
+   :parameter server: an instance of :class:`<server>`
+   :returns project: an instance of :class:`<project-object>`
 
 IDs
 ^^^
@@ -122,7 +123,7 @@ IDs
 
       An identifier for a module.
 
-   
+
 
    :slot id-library: an instance of :class:`<library-id>`
 
@@ -146,7 +147,7 @@ IDs
 
    :description:
 
-      An identifier for a method.   
+      An identifier for a method.
 
    :slot id-generic-function: an instance of :class:`<definition-id>`
    :slot id-specializers:  an instance of :drm:`<simple-object-vector>`
@@ -160,7 +161,7 @@ IDs
 
    :slot id-filename: an instance of :class:`<file-locator>`
    :slot id-line-number: an instance of :drm:`<integer>`.
-   
+
 .. class:: <library-object-location-id>
 
    :superclasses: :class:`<object-location-id>`
@@ -177,7 +178,7 @@ Environment Objects
 - :class:`<environment-object>`
 - :class:`<environment-object-with-id>`
 - :class:`<environment-object-with-library>`
-- :method:`note-object-properties-changed`
+- :gf:`note-object-properties-changed`
 - :gf:`environment-object-id`
 - :gf:`environment-object-exists?`
 - :gf:`environment-object-primitive-name`
@@ -233,57 +234,57 @@ Environment Objects
 
    :signature: note-object-properties-changed *project*, *object*, *type* => ()
 
-   :parameter: project: an instance of :class:`<project-object>`
-   :parameter: object: an instance of :class:`<environment-object>`
-   :parameter: type: an instance of :type:`<query-type>`
- 
+   :parameter project: an instance of :class:`<project-object>`
+   :parameter object: an instance of :class:`<environment-object>`
+   :parameter type: an instance of :type:`<query-type>`
+
 .. generic-function:: environment-object-id
    :open:
 
    :signature: environment-object-id *server*, *object* => *id*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
 
-   :return: id: an instance of :class:`false-or(<id-or-integer>) <<id-or-integer>>`
- 
+   :return id: an instance of :class:`false-or(<id-or-integer>) <<id-or-integer>>`
+
 .. generic-function:: environment-object-exists?
    :open:
 
    :signature: environment-object-exists? *server*, *object* => *exists?*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
 
-   :return: exists?: an instance of :drm:`<boolean>`   
+   :return exists?: an instance of :drm:`<boolean>`
 
 .. generic-function:: environment-object-primitive-name
    :open:
 
    :signature: environment-object-primitive-name *server*, *object* => *name*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
 
-   :return: name: an instance of :drm:`false-or(<string>) <<string>>`
+   :return name: an instance of :drm:`false-or(<string>) <<string>>`
 
 .. generic-function:: get-environment-object-primitive-name
    :open:
 
    :signature: get-environment-object-primitive-name *server*, *object* => *name*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
-   :return: name: an instance of :drm:`false-or(<string>) <<string>>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
+   :return name: an instance of :drm:`false-or(<string>) <<string>>`
 
 .. generic-function:: environment-object-library
    :open:
 
    :signature: environment-object-library *server*, *object* => *library*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
-   :return: library: an instance of :class:`false-or(<library-object>) <<library-object>>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
+   :return library: an instance of :class:`false-or(<library-object>) <<library-object>>`
 
 
 .. generic-function:: environment-object-basic-name
@@ -291,19 +292,19 @@ Environment Objects
 
    :signature: environment-object-basic-name *server*, *object* ``#key`` ``#all-keys`` => name
 
-   :parameter: server:  an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter server:  an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
 
-   :return: name:  an instance of :drm:`false-or(<string>) <<string>>`
+   :return name:  an instance of :drm:`false-or(<string>) <<string>>`
 
 .. generic-function:: environment-object-display-name
    :open:
 
    :signature: environment-object-display-name *server*, *object*, *namespace* ``#key`` ``#all-keys`` => name
 
-   :parameter: server:  an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
-   :parameter: namespace: an instance of :class:`false-or(<namespace-object> <<namespace-object>>`
+   :parameter server:  an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
+   :parameter namespace: an instance of :class:`false-or(<namespace-object> <<namespace-object>>`
 
    :return: name:  an instance of :drm:`false-or(<string>) <<string>>`
 
@@ -312,9 +313,9 @@ Environment Objects
 
    :signature: environment-object-unique-name *server*, *object*, *namespace* ``#key`` ``#all-keys`` => name
 
-   :parameter: server:  an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
-   :parameter: namespace: an instance of :class:`false-or(<namespace-object> <<namespace-object>>`
+   :parameter server:  an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
+   :parameter namespace: an instance of :class:`false-or(<namespace-object> <<namespace-object>>`
 
    :return: name:  an instance of :drm:`false-or(<string>) <<string>>`
 
@@ -322,8 +323,8 @@ Environment Objects
    :open:
 
    :signature: environment-object-type *server*, *object* => *type*
-   :parameter: server:  an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter server:  an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
 
    :return: type: an instance of :class:`<environment-object>`
 
@@ -331,7 +332,7 @@ Environment Objects
    :open:
 
    :signature: environment-object-type-name *object* => *type*
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter object: an instance of :class:`<environment-object>`
 
    :return: type-name: an instance of :drm:`<string>`
 
@@ -340,61 +341,61 @@ Environment Objects
 
    :signature: environment-object-source *server*, *object* => *source*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
 
-   :return: source: an instance of :drm:`false-or(<string>) <<string>>`
+   :return source: an instance of :drm:`false-or(<string>) <<string>>`
 
 .. generic-function:: environment-object-source-location
    :open:
 
    :signature: environment-object-source-location *server*, *object* => *location*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
 
-   :return: location: an instance of :class:`false-or(<source-location>) <<source-location>>`
+   :return location: an instance of :class:`false-or(<source-location>) <<source-location>>`
 
 .. generic-function:: environment-object-home-server?
 
    Note there is no generic function actually defined in this module.
 
    :signature: environment-object-home-server? *server*, *object* => *home?*
-   :parameter: server: an instance of :drm:`<object>`
-   :parameter: object: an instance of :drm:`<object>`
+   :parameter server: an instance of :drm:`<object>`
+   :parameter object: an instance of :drm:`<object>`
 
-   :return: home?: an instance of :drm:`<boolean>`
+   :return home?: an instance of :drm:`<boolean>`
 
 .. generic-function:: environment-object-home-name
    :open:
 
    :signature: environment-object-home-name     *server*, *object* => *name*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
 
-   :return: name: an instance of :class:`false-or(<name-object>) <<<name-object>>`
+   :return name: an instance of :class:`false-or(<name-object>) <<<name-object>>`
 
 .. generic-function:: environment-object-name
    :open:
 
    :signature: environment-object-name     *server*, *object*, *namespace* => *name*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
-   :parameter: namespace: an instance of :class:`<namespace-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
+   :parameter namespace: an instance of :class:`<namespace-object>`
 
-   :return: name: an instance of :class:`false-or(<name-object>) <<<name-object>>`
+   :return name: an instance of :class:`false-or(<name-object>) <<<name-object>>`
 
 .. generic-function:: source-location-environment-object
    :open:
 
    :signature: source-location-environment-object *server* *location* => *object*
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: location: an instance of :class:`<source-location>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter location: an instance of :class:`<source-location>`
 
-   :return: object: an instance of :class:`false-or(<environment-object>) <<environment-object>>`
+   :return object: an instance of :class:`false-or(<environment-object>) <<environment-object>>`
 
 .. generic-function:: find-environment-object
    :open:
@@ -403,60 +404,70 @@ Environment Objects
 
    :signature: find-environment-object *server*, *name* ``#key`` ``#all-keys`` => object
 
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: name: an instance of :drm:`<string>` or :class:`<id-or-integer>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter name: an instance of :drm:`<string>` or :class:`<id-or-integer>`
 
-   :return: object: an instance of :class:`false-or(<environment-object>) <<environment-object>>`
+   :return object: an instance of :class:`false-or(<environment-object>) <<environment-object>>`
 
 .. generic-function:: make-environment-object
    :sealed:
 
    :signature: make-environment-object *class* ``#key`` *project* *library* *id* *application-object-proxy* *compiler-object-proxy* => *object*
 
-   :parameter: class: a instance of :drm:`<class>`, a subclass of :class:<environment-object>
-   :key: project: an instance of :class:`<project-object>`
-   :key: library: an instance of :class:`false-or(<library-object>) <<library-object>>`
-   :key: id: an instance of :class:`false-or(<id-or-integer>) <<id-or-integer>>`
-   :key: application-object-proxy: an instance of :drm:`<object>`
-   :key: compiler-object-proxy: an instance of :drm:`<object>`
+   :parameter class: a instance of :drm:`<class>`, a subclass of :class:<environment-object>
+   :key project: an instance of :class:`<project-object>`
+   :key library: an instance of :class:`false-or(<library-object>) <<library-object>>`
+   :key id: an instance of :class:`false-or(<id-or-integer>) <<id-or-integer>>`
+   :key application-object-proxy: an instance of :drm:`<object>`
+   :key compiler-object-proxy: an instance of :drm:`<object>`
 
-   :return: object: an instance of :class:`<environment-object>`
+   :return object: an instance of :class:`<environment-object>`
 
 .. generic-function:: parse-environment-object-name
    :sealed:
 
    :signature: parse-environment-object-name *name* ``#key`` ``#all-keys`` => id
 
-   :parameter: name: an instance of :drm:`<string>`
+   :parameter name: an instance of :drm:`<string>`
 
-   :return: id: an instance of :class:`false-or(<id-or-integer>)<<id-or-integer>>`
+   :return id: an instance of :class:`false-or(<id-or-integer>)<<id-or-integer>>`
 
 .. generic-function:: parse-module-name
 
    :signature: parse-module-name *name* ``#key`` *library* => id
 
-   :parameter: name: an instance of :drm:`<string>`
-   :key: library: an instance of :class:`false-or(<library-id>) <<library-id>>`
+   :parameter name: an instance of :drm:`<string>`
+   :key library: an instance of :class:`false-or(<library-id>) <<library-id>>`
 
-   :return: id: an instance of :class:`false-or(<module-id>) <<module-id>>`
+   :return id: an instance of :class:`false-or(<module-id>) <<module-id>>`
 
 .. generic-function:: print-environment-object
    :open:
 
    :signature: print-environment-object *stream*, *server*, *object* ``#key`` ``#all-keys`` => ()
 
-   :parameter: stream: an instance of :class:`<stream>`
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter stream: an instance of :class:`<stream>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
 
 .. generic-function:: print-environment-object-name
    :open:
 
    :signature: print-environment-object-name *stream*, *server*, *object* ``#key`` ``#all-keys`` => ()
 
-   :parameter: stream: an instance of :class:`<stream>`
-   :parameter: server: an instance of :class:`<server>`
-   :parameter: object: an instance of :class:`<environment-object>`
+   :parameter stream: an instance of :class:`<stream>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
+
+.. generic-function:: print-environment-object-name-to-string
+   :open:
+
+   :signature: print-environment-object-name-to-string *server*, *object* ``#rest`` args ``#key`` *namespace* ``#all-keys`` => *name*
+
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<environment-object>`
+   :key namespace: an instance of :class:`<object>`
+   :value name: an instance of :drm:`<string>`
 
 Environment options
 ^^^^^^^^^^^^^^^^^^^
@@ -471,26 +482,315 @@ Compiler Objects
 ^^^^^^^^^^^^^^^^
 - :class:`<compiler-object>`
 
+.. class:: <compiler-object>
+   :sealed:
+   :abstract:
+
+   :superclass: :class:`<environment-object>`
+
+   :keyword compiler-object-proxy: an instance of :drm:`<object>`. Required.
+
+   :slot compiler-object-proxy:
+
+.. generic-function:: invalidate-compiler-proxy
+   :open:
+
+   :signature: invalidate-compiler-proxy *server*, *object* => ()
+
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<compiler-object>`
+
 Application Objects
 ^^^^^^^^^^^^^^^^^^^
 
 - :class:`<application-object>`
 - :class:`<application-code-object>`
+- :gf:`application-object-class`
+- :gf:`application-object-address`
+- :gf:`invalidate-application-proxy`
+
+.. class:: <application-object>
+   :abstract:
+   :sealed:
+   :primary:
+
+   :superclasses: :class:`<environment-object>`
+
+   :keyword application-object-proxy: an instance of :drm:`<object>`.
+
+   :slot application-object-proxy: an instance of :drm:`<object>`.
+
+.. generic-function:: invalidate-application-proxy
+
+   :signature: invalidate-application-proxy *server*, *object* => ()
+
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<application-object>`
+
+.. generic-function:: application-object-class
+   :open:
+
+   :signature: application-object-class *server*, *object* => *class*
+
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<application-object>`
+
+   :return class: an instance of :class:`false-or(<class-object>) <<class-object>>`
+	       
+.. generic-function:: application-object-address
+   :open:
+
+   :signature: application-object-class *server*, *object* => *class*
+
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<application-object>`
+
+   :return class: an instance of :class:`false-or(<address-object>) <<address-object>>`
+	       
+.. class:: <application-code-object>
+   :abstract:
+   :sealed:
+
+   :superclasses: :class:`<application-object>`
+
+   :keyword application-object-proxy: an instance of :drm:`<object>`.
+
+Unbound Objects
+^^^^^^^^^^^^^^^
 - :class:`<unbound-object>`
-- :class:`<address-display-format>`
-- :class:`<data-display-format>`
+- :const:`$unbound-object`
+
+.. class:: <unbound-object>
+	     
+   :superclasses: :class:`<application-object>`
+
+.. constant:: $unbound-object
+
+   :type: :class:`<unbound-object>`
+
+   Used to indicate the application is not set. Only used once, in the debugger.
+
+Address Objects
+^^^^^^^^^^^^^^^
+- :type:`<address-display-format>`
+- :type:`<data-display-format>`
 - :class:`<data-display-size>`
 - :class:`<address-object>`
+- :const:`$invalid-address-object`
+- :gf:`address-application-object`
+- :gf:`address-to-string`
+- :gf:`string-to-address`
+- :gf:`indirect-address`
+- :gf:`indexed-address`
+- :gf:`address-read-memory-contents`
+- :gf:`address-read-application-object`
+
+.. class:: <address-object>
+
+   :superclasses: :class:`<application-object>`
+
+.. type:: <address-display-format>
+
+   :equivalent: One of ``#"octal"``, ``#"decimal"`` or ``#"hexadecimal"``.
+
+.. type:: <data-display-format>
+
+   :equivalent: A type union of :type:`<address-display-format>` and :type:`<non-address-display-format>`
+
+.. type:: <non-address-display-format>
+
+   :equivalent: One of ``#"byte-character"``,
+         ``#"unicode-character"``,
+         ``#"single-float"`` or 
+         ``#"double-float"``
+
+.. constant:: $invalid-address-object
+
+   This unique instance of <address-object> serves as a legal member of
+   the type, but without any valid interpretation. This is used in
+   preference to #f as a failing result or argument.
+   
+   :type: <address-object>
+
+.. generic-function:: address-application-object
+   :open:
+
+   Convert an address to a more specific object.
+   
+   :signature: address-application-object *server*, *addr* => *obj*
+
+   :parameter server: The backend dispatching object, an instance of :class:`<server>`
+   :parameter addr: The address to be converted, an instance of :class:`<address-object>`
+
+   :return obj: an instance of :class:`<application-object>`
+
+   :description:
+      Converts an abstract address to a more specific application
+      object where possible. (Eg. if the address corresponds
+      exactly to a dylan object, then the dylan object will be
+      returned).
+
+      The return value is an instance of <application-object>, possibly a
+      <foreign-object>. If the address is not valid, then
+      it may just be returned unchanged, which is to contract
+      since <address-object> is itself a subclass of
+      <application-object>.
+
+.. generic-function:: address-to-string
+   :open:
+
+   Converts an abstract address into a printable string.
+
+   :signature: address-to-string *server*, *address*, ``#key`` *format* => *s*
+   :param server: an instance of :class:`<server>`
+   :param address: an instance of :class:`<address>`
+   :param #key format: an instance of :class:`<address-display-format>`
+   :return s: an instance of :drm:`<string>`
+
+   :description: Outputs a string of fixed size per runtime platform, padded with
+		 leading
+		 zeros if necessary, and formatted as per the supplied number base.
+		 The string contains no extra decoration. This must be added by the
+		 UI where required.
+		 If the supplied address is invalid, the server will return a
+		 string of the correct size, but filled with question-mark ('?')
+		 characters.
+		   
+.. generic-function:: string-to-address
+   :open:
+
+   Converts a string to an abstract address.
+
+   :signature: string-to-address *server*, *str*, ``#key`` *format* => *address*
+   :param server: an instance of :class:`<server>`
+   :param str: an instance of :drm:`<string>`
+   :param #key format: an instance of :class:`<address-display-format>`
+   :return address: an instance of :class:`<address>`
+
+   :description: 
+      This is not a parsing function. For a string that is not well-formed,
+      the address returned may be invalid, or otherwise nonsensical.
+      Parsing should be performed by the UI, which should also undertake
+      to strip away any extra decoration that it might require in order
+      to determine the number base (eg. "#x").
+
+.. generic-function:: indirect-address
+   :open:
+      
+   Indirects through an address to generate a new address.
+
+   :signature: indirect-address *server*, *address* => *i-address*
+   :param server: an instance of :class:`<server>`
+   :param address: an instance of :class:`<address>`
+   :return i-address: an instance of :class:`<address>`
+
+   :description:
+      Outputs the address object obtained by indirecting through
+      the original address.
+      It is entirely possible for this address to be invalid,
+      and this will certainly be the case if the original
+      address is invalid.
+
+.. generic-function:: indexed-address
+   :open:
+      
+   Adds an indexed-offset to a base address.
+
+   :signature: indexed-address *server*, *addr*, *index*, *size* => *i-addr*
+
+   :param server: an instance of :class:`<server>`
+   :param addr: The base address, an instance of :class:`<address>`
+   :param index: An integer used as the index. An instance of :drm:`<integer>`
+   :param size: An instance of :class:`<data-display-size>`. The implementation
+                will multiply the index by the appropriate factor according
+                to this. The default is #"word".
+   :return i-addr: an instance of :class:`<address>`
+
+.. generic-function:: address-read-memory-contents
+   :open:
+
+   :signature: address-read-memory-contents *server*, *addr*, ``#key`` *size*, *format*, *from-index*, *to-index* => *printable-strings*, *nxt*
+
+   :param server: an instance of :class:`<server>`
+   :param addr: The base address, an instance of :class:`<address>`
+   :param #key size: The granularity at which to read the data, defaults
+		     to ``#"word"``, the runtime platform word-size.
+   :param #key format: The format directive for the imported data.
+		       An instance of :class:`<address-display-format>`
+   :param #key from-index: An index interpreted according to the ``size`` parameter,
+		      from which to read the first object. Default zero.
+		      An instance of :drm:`<integer>`
+   :param #key to-index: An index 
+		      from which to read the last object. Default 7
+		      An instance of :drm:`<integer>`
+   :return printable-strings: an instance of :drm:`<sequence>`
+   :return nxt: an instance of :class:`<address-object>`
+   :description:
+      Import a block of memory contents starting at the supplied
+      address, and return the contents as formatted strings. Also
+      returns the address that immediately follows the block that
+      has been read.
+
+.. generic-function:: address-read-application-object
+   :open:
+      
+   Import an application object from an address.
+
+   :signature: address-read-application-object *server*, *addr* => *obj*
+
+   :param server: The backend dispatching object. An instance of :class:`<server>`
+   :param addr: The address at which to base the import. An instance of :class:`<address-object>`
+   :return obj: An instance of :class:`false-or(<application-object>) <<application-object>>`
+		Returns the imported application object, or #f if the
+                import fails.
+      
+Register Objects
+^^^^^^^^^^^^^^^^
+
 - :class:`<register-category>`
 - :class:`<register-object>`
+- :gf:`application-registers`
+- :gf:`do-application-registers`
+- :gf:`register-contents`
+- :gf:`register-contents-address`
+- :gf:`lookup-register-by-name`
+
+.. class:: <register-object>
+
+   :superclasses: :class:`<application-object>`
+
+   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
+   :keyword application-object-proxy: an instance of :drm:`<object>`.
+
+Component Objects
+^^^^^^^^^^^^^^^^^
 - :class:`<component-object>`
+- :gf:`component-image-filename`
+- :gf:`component-version`
+- :gf:`component-version-string`
+- :gf:`lookup-component-by-name`
+- :gf:`application-components`
+- :gf:`do-application-components`
+
+Application and Compiler Objects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 - :class:`<application-and-compiler-object>`
 
-   .. 
-      done to here
 
+Composite Objects
+^^^^^^^^^^^^^^^^^
 - :class:`<composite-object>`
+- :gf:`composite-object-size`
+- :gf:`composite-object-contents`
+  
+User Objects
+^^^^^^^^^^^^
 - :class:`<user-object>`
+- :gf:`user-object-slot-value`
+ 
+User Class Info
+^^^^^^^^^^^^^^^
 - :class:`<user-class-info>`
 - :class:`<internal-object>`
 - :class:`<foreign-object>`
@@ -588,61 +888,11 @@ Environment Protocols Module Classes
 
 
 
-.. class:: <compiler-object>
-
-   :superclasses: :class:`<environment-object>`
-
-   :keyword compiler-object-proxy: an instance of :drm:`<object>`. Required. 
-
-.. class:: <address-object>
-
-   :superclasses: :class:`<application-object>`
 
 
 
 
 
-.. class:: <compiler-object>
-   :abstract:
-   :sealed:
-
-   :superclasses: :class:`<environment-object>`
-
-   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
-   :keyword compiler-object-proxy: an instance of :drm:`<object>`. Required.
-
-.. class:: <application-object>
-   :abstract:
-   :sealed:
-   :primary:
-
-   :superclasses: :class:`<environment-object>`
-
-   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
-   :keyword application-object-proxy: an instance of :drm:`<object>`.
-
-.. class:: <application-code-object>
-   :abstract:
-   :sealed:
-
-   :superclasses: :class:`<application-object>`
-
-   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
-   :keyword application-object-proxy: an instance of :drm:`<object>`.
-
-.. class:: <unbound-object>
-
-   :superclasses: :class:`<application-object>`
-
-   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
-   :keyword application-object-proxy: an instance of :drm:`<object>`.
-
-.. class:: <register-object>
-
-   :superclasses: :class:`<application-object>`
-
-   :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
-   :keyword application-object-proxy: an instance of :drm:`<object>`.   
 
 .. class:: <component-object>
 
@@ -691,9 +941,9 @@ Environment Protocols Module Generics
    :open:
 
    :signature: application-object-class *server* *application-object* => false-or(*class-object*)
-   :parameter: server: An instance of :class:`<server>`
-   :parameter: application-object: An instance of :class:`<application-object>`
-   :value: class-object: An instance of :class:`<class-object>`
+   :parameter server: An instance of :class:`<server>`
+   :parameter application-object: An instance of :class:`<application-object>`
+   :value class-object: An instance of :class:`<class-object>`
 
    :description:
 
@@ -709,19 +959,19 @@ Environment Protocols Module Generics
    :open:
 
    :signature: do-direct-subclasses *function* *server* *class* #key client *client* => ()
-   :parameter: function: An instance of :drm:`<function>`
-   :parameter: server: An instance of :class:`<server`
-   :parameter: class: An instance of :class:`<class-object>`
-   :parameter: client: An instance of :drm:`<object>`
+   :parameter function: An instance of :drm:`<function>`
+   :parameter server: An instance of :class:`<server`
+   :parameter class: An instance of :class:`<class-object>`
+   :parameter client: An instance of :drm:`<object>`
 
 .. generic-function:: do-direct-superclasses
    :open:
 
    :signature: do-direct-superclasses *function* *server* *class* #key client *client* => ()
-   :parameter: function: An instance of :drm:`<function>`
-   :parameter: server: An instance of :class:`<server`
-   :parameter: class: An instance of :class:`<class-object>`
-   :parameter: client: An instance of :drm:`<object>`
+   :parameter function: An instance of :drm:`<function>`
+   :parameter server: An instance of :class:`<server`
+   :parameter class: An instance of :class:`<class-object>`
+   :parameter client: An instance of :drm:`<object>`
 
 Environment Protocols Module Methods
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -729,38 +979,19 @@ Environment Protocols Module Methods
 Environment Protocols Module Constants
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. constant:: <address-display-format>
-
-   :description: One of ``#"octal"``, ``#"decimal"`` or ``#"hexadecimal"``.
-
-.. constant:: <data-display-format>
-
-   :description: One of ``#"octal"``, ``#"decimal"``, ``#"hexadecimal"``, 
-      ``#"byte-character"``, ``#"unicode-character"``, ``#"single-float"``
-      or ``#"double-float"``.
-
 .. constant:: <data-display-size>
 
    :description: One of
 
-      * ``#"byte"``  - 8-bit value 
-      * ``#"short"`` - 16-bit value 
-      * ``#"long"``  - 32-bit value 
-      * ``#"hyper"`` - 64-bit value 
-      * ``#"float"`` - Single-precision floating-point value 
-      * ``#"double"`` -Double-precision floating-point value 
+      * ``#"byte"``  - 8-bit value
+      * ``#"short"`` - 16-bit value
+      * ``#"long"``  - 32-bit value
+      * ``#"hyper"`` - 64-bit value
+      * ``#"float"`` - Single-precision floating-point value
+      * ``#"double"`` -Double-precision floating-point value
 
-.. constant:: $invalid-address-object
+.. type:: <register-category>
 
-   :description: an instance of :class:`<address-object>`
-      which is used only to indicate a failing result or argument
-
-.. constant:: <id-or-integer>
-
-   :description: a type union of :class:`<id>` and :drm:`<integer>`.
-
-.. constant:: <register-category> 
-
-   :description: one of ``#"general-purpose"``,
-         ``#"special-purpose"``,
-         or ``#"floating-point"``.
+   :equivalent: one of ``#"general-purpose"``,
+      ``#"special-purpose"``,
+      or ``#"floating-point"``.
