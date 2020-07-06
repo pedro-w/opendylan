@@ -4,12 +4,22 @@ Environment Protocols
 
 .. library:: environment-protocols
 
+The Dylan compiler and integrated development environment maintain
+a model of the program under development, with objects representing
+libraries, modules, methods and so on. It also includes run time entities,
+such as registers and breakpoints in the debugger.
+
+This library represents the interface to that model.  
+
 .. module:: environment-protocols
 
-This is information about environment protocols.
+This is only module in the library, and exports many symbols. They
+are classified according to the sub-sections below.
 
 Server Objects
 ^^^^^^^^^^^^^^
+The 'server' is the top-level object which is used to resolve all others.
+It is an abstract class; concrete sub-classes provide the actual behavior.
 
 - :class:`<server>`
 - :class:`<closed-server-error>`
@@ -749,19 +759,120 @@ Register Objects
 
 - :class:`<register-category>`
 - :class:`<register-object>`
-- :gf:`application-registers`
+- :func:`application-registers`
 - :gf:`do-application-registers`
 - :gf:`register-contents`
 - :gf:`register-contents-address`
 - :gf:`lookup-register-by-name`
 
+.. type:: <register-category>
+	  
+   Describes an abstract categorization for the runtime register set.
+
+   :equivalent: one of ``#"general-purpose"``,
+      ``#"special-purpose"``,
+      or ``#"floating-point"``.
+
 .. class:: <register-object>
 
+   Represents a hardware-level register.
+   
    :superclasses: :class:`<application-object>`
 
    :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
    :keyword application-object-proxy: an instance of :drm:`<object>`.
 
+.. function:: application-registers
+
+   :signature: application-registers *server* ``#key`` *category* => *classes*
+   :param server: an instance of :class:`<server>`
+   :param #key category: an instance of :type:`<register-category>`
+   :return classes: an instance of :drm:`<sequence>`
+
+.. generic-function:: lookup-register-by-name
+   :open:
+
+   Tries to find a register object corresponding to a given
+   name.
+   
+   :signature: lookup-register-by-name *server*, *name* => *reg*
+   :param server: an instance of :class:`<server>`
+   :param name: an instance of :drm:`<string>`
+   :return reg: an instance of :class:`false-or(<register-object>) <<register-object>>`
+
+   :description:
+      If successful, returns a :class:`<register-object>`.
+      Returns #f if no match is found, or if the application
+      is not tethered.
+
+.. generic-function:: do-application-registers
+   :open:
+      
+   Iterates over all runtime registers.
+
+   :signature: do-application-registers *f*, *server* ``#key`` *category* => ()
+
+   :param f: an instance of :drm:`<function>`
+   :param server: an instance of :class:`<server>`
+   :param #key category: an instance of :type:`<register-category>`
+
+   :description:
+      The function has signature ``(<register-object>) => ()``.
+      If category is supplied, must be a <register-category>. The
+      iteration will be restricted to registers of this
+      category.
+      If not supplied, the iteration will include all
+      available platform registers.
+
+.. generic-function:: register-contents
+   :open:
+
+   Retrieve the value stored in a register.
+      
+   :signature: register-contents *server*, *reg*, *thread* ``#key`` *stack-frame-context* => *obj*
+
+   :param server: an instance of :class:`<server>`
+   :param reg: an instance of :class:`<register-object>`
+   :param thread: an instance of :class:`<thread-object>`
+   :param #key stack-frame-context: an instance of :class:`<stack-frame-object>`
+   :return obj: an instance of :class:`false-or(<application-object>) <<application-object>>`
+
+   :description:
+      The thread context must be supplied as it is assumed that registers are a thread-local
+      resource on all platforms.
+      On different platforms, varying numbers of registers
+      are saved per stack frame. If a <stack-frame-object>
+      is supplied via the keyword argument, and the corresponding
+      register is stack-frame local, then the appropriate
+      value will be retrieved. Where this is not possible,
+      the basic thread-local value will be used regardless of
+      the frame context.
+
+.. generic-function:: register-contents-address
+   :open:
+
+   Retrieve the value stored in a register, represented as an address.
+      
+   :signature: register-contents *server*, *reg*, *thread* ``#key`` *stack-frame-context* => *obj*
+
+   :param server: an instance of :class:`<server>`
+   :param reg: an instance of :class:`<register-object>`
+   :param thread: an instance of :class:`<thread-object>`
+   :param #key stack-frame-context: an instance of :class:`<stack-frame-object>`
+   :return obj: an instance of :class:`false-or(<address-object>) <<address-object>>`
+
+   :description:
+      The thread context must be supplied as it is assumed that registers are a thread-local
+      resource on all platforms.
+      On different platforms, varying numbers of registers
+      are saved per stack frame. If a <stack-frame-object>
+      is supplied via the keyword argument, and the corresponding
+      register is stack-frame local, then the appropriate
+      value will be retrieved. Where this is not possible,
+      the basic thread-local value will be used regardless of
+      the frame context. The returned object is the register's context, interpreted as an
+      address <application-object>.
+      
 Component Objects
 ^^^^^^^^^^^^^^^^^
 - :class:`<component-object>`
@@ -990,8 +1101,3 @@ Environment Protocols Module Constants
       * ``#"float"`` - Single-precision floating-point value
       * ``#"double"`` -Double-precision floating-point value
 
-.. type:: <register-category>
-
-   :equivalent: one of ``#"general-purpose"``,
-      ``#"special-purpose"``,
-      or ``#"floating-point"``.
