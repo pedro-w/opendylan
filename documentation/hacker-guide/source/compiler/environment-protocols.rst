@@ -878,11 +878,97 @@ Component Objects
 - :class:`<component-object>`
 - :gf:`component-image-filename`
 - :gf:`component-version`
-- :gf:`component-version-string`
+- :func:`component-version-string`
 - :gf:`lookup-component-by-name`
-- :gf:`application-components`
+- :func:`application-components`
 - :gf:`do-application-components`
 
+.. class:: <component-object>
+
+   A shared object or executable file.
+
+   :superclass: :class:`<application-object>`
+
+   :description:
+      A subclass of <application-object>.
+      Represents a runtime "component" - ie. a DLL/EXE file, or a shared
+      object file.
+
+      ``application-object-address`` can be called on objects of this class,
+      and the result is interpreted as the "base address" of the component.
+
+      ``environment-object-primitive-name`` for this class returns the name
+      of the component as stripped of all platform-specific pathname
+      and extension strings. Therefore, there is no ``component-name``
+      protocol.  
+
+.. generic-function:: component-image-filename
+   :open:
+
+   Locates the binary image file (on disk) associated with
+   the component.
+
+   :signature: component-image-filename *server*, *component* => *file*
+
+   :param server: an instance of :class:`<server>`
+   :param component: an instance of :class:`<component-object>`
+   :return file: an instance of :class:`false-or(<file-locator>) <<file-locator>>`
+
+.. generic-function:: component-version
+   :open:
+
+   Return the version number of a component.
+
+   :signature: component-version *server*, *component* => *major-version-index*, *minor-version-index*   
+
+   :param server: an instance of :class:`<server>`
+   :param component: an instance of :class:`<component-object>`
+   :return major-version-index: an instance of :drm:`<integer>`
+   :return minor-version-index: an instance of :drm:`<integer>`
+
+   :description:
+      Returns the version number for a component. This is assumed
+      to be both meaningful and obtainable on all platforms.
+
+.. function:: component-version-string
+
+   Return the component's version as a string.
+
+   :signature: component-version *server*, *component* => *version-string*
+
+   :param server: an instance of :class:`<server>`
+   :param component: an instance of :class:`<component-object>`
+   :return version-string: an instance of :drm:`<string>`
+
+.. generic-function:: lookup-component-by-name
+   :open:
+
+   :signature: lookup-component-by-name *server*, *name* => *component*
+   :param server: an instance of :class:`<server>`
+   :return component: an instance of :class:`false-or(<component-object>) <<component-object>>`
+   :return version-string: an instance of :drm:`<string>`
+
+.. generic-function:: do-application-components
+   :open:
+
+   Iterates over the components currently loaded into an
+   application.
+
+   :signature: do-application-components *f*, *server* => ()
+
+   :param f: an instance of :class:`<function>` with signature 
+            ``(<component-object>) => ()``
+   :param server: an instance of :class:`<server>`
+   
+.. function:: application-components
+
+   Get a collection of all components
+
+   :signature: application-components *server* => *components*
+
+   :param server: an instance of :class:`<server>`
+   :return components: an instance of :drm:`<sequence>`
+   
 Application and Compiler Objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
