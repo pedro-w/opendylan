@@ -2,6 +2,8 @@
 Environment Protocols
 *********************
 
+This is the interface used to communicate with the back-end compiler or IDE.
+
 .. library:: environment-protocols
 
 The Dylan compiler and integrated development environment maintain
@@ -15,6 +17,18 @@ This library represents the interface to that model.
 
 This is only module in the library, and exports many symbols. They
 are classified according to the sub-sections below.
+
+- :ref:`Server Objects`
+- :ref:`IDs`
+- :ref:`Environment Objects`
+- :ref:`Application Objects`
+- :ref:`Unbound Objects`
+- :ref:`Address Objects`
+- :ref:`Register Objects`
+- :ref:`Component Objects`
+- :ref:`Application and Compiler Objects`
+- :ref:`Composite Objects`
+
 
 Server Objects
 ^^^^^^^^^^^^^^
@@ -974,6 +988,13 @@ Application and Compiler Objects
 
 - :class:`<application-and-compiler-object>`
 
+.. class:: <application-and-compiler-object>
+   :open:
+   :abstract:
+
+   Combined application and compiler object.
+
+   :superclasses: :class:`<application-object>` :class:`<compiler-object>`
 
 Composite Objects
 ^^^^^^^^^^^^^^^^^
@@ -981,10 +1002,34 @@ Composite Objects
 - :gf:`composite-object-size`
 - :gf:`composite-object-contents`
   
+.. class:: <composite-object>
+   :abstract:
+
+   :superclass: :class:`<application-object>`
+
+.. generic-function:: composite-object-size
+   :open:
+
+   :signature: composite-object-size *server*, *object*, ``#key`` *inherited?* => *size*
+   :param server:  an instance of :class:`<server>`
+   :param object: an instance of :class:`<composite-object>`
+   :param #key inherited?: an instance of :drm:`<boolean>`
+   :return size: an instance of :drm:`false-or(<integer>) <<integer>>`   
+
+.. generic-function:: composite-object-contents
+   :open:
+
+   :signature: composite-object-contents *server*, *object*, ``#key`` *inherited?* => *names*, *values*
+   :param server:  an instance of :class:`<server>`
+   :param object: an instance of :class:`<composite-object>`
+   :param #key inherited?: an instance of :drm:`<boolean>`
+   :return names: an instance of :drm:`<sequence>`   
+   :return values: an instance of :drm:`<sequence>`   
 User Objects
 ^^^^^^^^^^^^
 - :class:`<user-object>`
 - :gf:`user-object-slot-value`
+- :gf:`user-object-slot-values`
  
 User Class Info
 ^^^^^^^^^^^^^^^
