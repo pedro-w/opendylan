@@ -28,6 +28,7 @@ are classified according to the sub-sections below.
 - :ref:`Component Objects`
 - :ref:`Application and Compiler Objects`
 - :ref:`Composite Objects`
+- :ref:`User Objects`
 
 
 Server Objects
@@ -1025,12 +1026,36 @@ Composite Objects
    :param #key inherited?: an instance of :drm:`<boolean>`
    :return names: an instance of :drm:`<sequence>`   
    :return values: an instance of :drm:`<sequence>`   
+
 User Objects
 ^^^^^^^^^^^^
 - :class:`<user-object>`
 - :gf:`user-object-slot-value`
 - :gf:`user-object-slot-values`
  
+.. class:: <user-object>
+   
+   :superclasses: :class:`<composite-object>` :class:`<environment-object-with-id>`
+
+.. generic-function:: user-object-slot-values
+
+   :signature: user-object-slot-values *server*, *object* => *functions*, *values*
+
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<user-object>`
+   :return functions: an instance of :drm:`<sequence>`
+   :return values: an instance of :drm:`<sequence>`
+
+.. generic-function:: user-object-slot-value   
+   :open:
+
+   :signature: user-object-slot-value *server*, *object*, *slot* ``#key`` *repeated-element* => *value*
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<user-object>`
+   :param slot: an type union of :class:`<definition-id>` and :class:`<slot-object>`
+   :param #key repeated-element: an instance of :drm:`<object>`
+   :return value: an instance of :class:`false-or(<environment-object>) <<environment-object>>`
+
 User Class Info
 ^^^^^^^^^^^^^^^
 - :class:`<user-class-info>`
