@@ -30,6 +30,8 @@ are classified according to the sub-sections below.
 - :ref:`Composite Objects`
 - :ref:`User Objects`
 - :ref:`User Class Info`
+- :ref:`Internal Objects`
+- :ref:`Foreign Objects`
 
 
 Server Objects
@@ -1083,10 +1085,19 @@ Internal Objects
 
 - :class:`<internal-object>`
 
+.. class:: <internal-object>
+
+   :superclass: :class:`<user-object>`
+
+
 Foreign Objects
 ^^^^^^^^^^^^^^^
 
 - :class:`<foreign-object>`
+
+.. class:: <foreign-object>
+
+   :superclass: :class:`<application-code-object>`
 
 Dylan Objects
 ^^^^^^^^^^^^^
