@@ -32,6 +32,8 @@ are classified according to the sub-sections below.
 - :ref:`User Class Info`
 - :ref:`Internal Objects`
 - :ref:`Foreign Objects`
+- :ref:`Dylan Objects`
+- :ref:`Dylan Expression Objects`
 
 
 Server Objects
@@ -1102,6 +1104,11 @@ Foreign Objects
 Dylan Objects
 ^^^^^^^^^^^^^
 
+Dylan objects don't seem to do much yet, but it seems like it should
+be useful for the environment to be able to work out if an object is
+part of the language (e.g. a class) or whether it is an abstraction
+provided by the environment (e.g. a project)
+
 - :class:`<dylan-object>`
 - :class:`<dylan-application-object>`
 - :class:`<immediate-application-object>`
@@ -1115,11 +1122,97 @@ Dylan Objects
 - :const:`$<method>-id`
 - :const:`$<generic-function>-id`
 
+.. class:: <dylan-object>
+   :open:
+   :abstract:
+
+   :superclass: :class:`<environment-object>`
+
+.. class:: <dylan-application-object>
+   :open:
+   :abstract:
+
+   :superclass: :class:`<dylan-object>` :class:`<application-object>`
+
+.. class:: <immediate-application-object>
+   :open:
+   :abstract:
+
+   :superclass: :class:`<dylan-application-object>` 
+
+.. class:: <dylan-compiler-object>
+   :open:
+   :abstract:
+
+   :superclass: :class:`<dylan-object>` :class:`<compiler-object>`
+
+
+.. constant:: $dylan-library-id
+   :type: :class:`<library-id>`
+
+.. constant:: $dylan-module-id
+   :type: :class:`<module-id>`
+
+.. constant:: $dylan-extensions-module-id
+
+   :type: :class:`<module-id>`
+
+.. constant:: $dispatch-engine-module-id
+
+   :type: :class:`<module-id>`
+
+.. constant:: $<object>-id
+
+   :type: :class:`<definition-id>`
+
+.. constant:: $<class>-id
+   :type: :class:`<definition-id>`
+
+.. constant:: $<method>-id
+
+   :type: :class:`<definition-id>`
+
+.. constant:: $<generic-function>-id
+
+   :type: :class:`<definition-id>`
+
+.. constant:: $<boolean>-id
+
+   :type: :class:`<definition-id>`
+
+
+   
 Dylan Expression Objects
 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+Expression objects represent arbitrary expressions in Dylan, usually
+on the right-hand side of an assignment.
+
 - :class:`<expression-object>`
 - :class:`<type-expression-object>`
 - :class:`<complex-type-expression-object>`
+
+.. class:: <expression-object>
+   :open:
+   :abstract:
+
+   A basic expression.
+
+   :superclass: :class:`<dylan-compiler-object>`
+
+.. class:: <type-expression-object>
+   :open:
+
+   Expressions that evaluate to a type.
+
+   :superclass: :class:`<expression-object>`
+
+.. class:: <complex-type-expression-object>
+   :open:
+
+   The canonical type expression of arbitrary complexity (only one instance)
+   
+   :superclass: :class:`<type-expression-object>`
 
 Dylan application objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1128,6 +1221,20 @@ Dylan application objects
 - :class:`<symbol-object>`
 - :class:`<number-object>`
 - :class:`<integer-object>`
+
+.. class:: <character-object>
+
+   :superclass: :class:`<immediate-application-object>` 
+
+.. class:: <symbol-object>
+
+   :superclass: :class:`<immediate-application-object>` 
+
+.. class:: <boolean-object>
+
+   :superclass: :class:`<immediate-application-object>` 
+   :keyword true?: an instance of :drm:`<boolean>`
+   :slot boolean-object-true?:
 
 
 - :class:`<boolean-object>`
