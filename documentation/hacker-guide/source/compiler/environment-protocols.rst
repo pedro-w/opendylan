@@ -29,6 +29,7 @@ are classified according to the sub-sections below.
 - :ref:`Application and Compiler Objects`
 - :ref:`Composite Objects`
 - :ref:`User Objects`
+- :ref:`User Class Info`
 
 
 Server Objects
@@ -1059,20 +1060,65 @@ User Objects
 User Class Info
 ^^^^^^^^^^^^^^^
 - :class:`<user-class-info>`
+- :func:`user-object-class-mappings`
+
+.. class:: <user-class-info>
+   :sealed:
+
+   :superclasses: :class:`<object>`
+
+   :keyword class: an instance of :drm:`<class>`. Required.
+   :keyword id: an instance of :class:`<definition-id>`. Required.
+
+   :slot user-class-info-class:  an instance of :drm:`<class>`
+   :slot user-class-info-id: an instance of :class:`<definition-id>`
+
+.. function:: user-object-class-mappings
+
+   :signature: user-object-class-mappings () => mappings
+   :return mappings: an instance of :drm:`<sequence>`
+
+Internal Objects
+^^^^^^^^^^^^^^^^
+
 - :class:`<internal-object>`
+
+Foreign Objects
+^^^^^^^^^^^^^^^
+
 - :class:`<foreign-object>`
+
+Dylan Objects
+^^^^^^^^^^^^^
+
 - :class:`<dylan-object>`
 - :class:`<dylan-application-object>`
 - :class:`<immediate-application-object>`
 - :class:`<dylan-compiler-object>`
+- :const:`$dylan-library-id`
+- :const:`$dylan-module-id`
+- :const:`$dylan-extensions-module-id`
+- :const:`$dispatch-engine-module-id`
+- :const:`$<object>-id`
+- :const:`$<class>-id`
+- :const:`$<method>-id`
+- :const:`$<generic-function>-id`
+
+Dylan Expression Objects
+^^^^^^^^^^^^^^^^^^^^^^^^
 - :class:`<expression-object>`
 - :class:`<type-expression-object>`
 - :class:`<complex-type-expression-object>`
+
+Dylan application objects
+^^^^^^^^^^^^^^^^^^^^^^^^^
 - :class:`<character-object>`
 - :class:`<string-object>`
 - :class:`<symbol-object>`
 - :class:`<number-object>`
 - :class:`<integer-object>`
+
+
 - :class:`<boolean-object>`
 - :class:`<collection-object>`
 - :class:`<sequence-object>`
