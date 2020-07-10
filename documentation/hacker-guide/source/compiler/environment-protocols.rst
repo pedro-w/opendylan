@@ -11,7 +11,7 @@ a model of the program under development, with objects representing
 libraries, modules, methods and so on. It also includes run time entities,
 such as registers and breakpoints in the debugger.
 
-This library represents the interface to that model.  
+This library represents the interface to that model.
 
 .. module:: environment-protocols
 
@@ -36,6 +36,7 @@ are classified according to the sub-sections below.
 - :ref:`Dylan Expression Objects`
 - :ref:`Dylan Application Objects`
 - :ref:`Boolean Objects`
+- :ref:`Collection Objects`
 
 
 Server Objects
@@ -568,7 +569,7 @@ Application Objects
    :parameter object: an instance of :class:`<application-object>`
 
    :return class: an instance of :class:`false-or(<class-object>) <<class-object>>`
-	       
+
 .. generic-function:: application-object-address
    :open:
 
@@ -578,7 +579,7 @@ Application Objects
    :parameter object: an instance of :class:`<application-object>`
 
    :return class: an instance of :class:`false-or(<address-object>) <<address-object>>`
-	       
+
 .. class:: <application-code-object>
    :abstract:
    :sealed:
@@ -593,7 +594,7 @@ Unbound Objects
 - :const:`$unbound-object`
 
 .. class:: <unbound-object>
-	     
+
    :superclasses: :class:`<application-object>`
 
 .. constant:: $unbound-object
@@ -633,7 +634,7 @@ Address Objects
 
    :equivalent: One of ``#"byte-character"``,
          ``#"unicode-character"``,
-         ``#"single-float"`` or 
+         ``#"single-float"`` or
          ``#"double-float"``
 
 .. constant:: $invalid-address-object
@@ -641,14 +642,14 @@ Address Objects
    This unique instance of <address-object> serves as a legal member of
    the type, but without any valid interpretation. This is used in
    preference to #f as a failing result or argument.
-   
+
    :type: <address-object>
 
 .. generic-function:: address-application-object
    :open:
 
    Convert an address to a more specific object.
-   
+
    :signature: address-application-object *server*, *addr* => *obj*
 
    :parameter server: The backend dispatching object, an instance of :class:`<server>`
@@ -674,9 +675,9 @@ Address Objects
    Converts an abstract address into a printable string.
 
    :signature: address-to-string *server*, *address*, ``#key`` *format* => *s*
-   :param server: an instance of :class:`<server>`
-   :param address: an instance of :class:`<address>`
-   :param #key format: an instance of :class:`<address-display-format>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter address: an instance of :class:`<address>`
+   :parameter #key format: an instance of :class:`<address-display-format>`
    :return s: an instance of :drm:`<string>`
 
    :description: Outputs a string of fixed size per runtime platform, padded with
@@ -687,19 +688,19 @@ Address Objects
 		 If the supplied address is invalid, the server will return a
 		 string of the correct size, but filled with question-mark ('?')
 		 characters.
-		   
+
 .. generic-function:: string-to-address
    :open:
 
    Converts a string to an abstract address.
 
    :signature: string-to-address *server*, *str*, ``#key`` *format* => *address*
-   :param server: an instance of :class:`<server>`
-   :param str: an instance of :drm:`<string>`
-   :param #key format: an instance of :class:`<address-display-format>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter str: an instance of :drm:`<string>`
+   :parameter #key format: an instance of :class:`<address-display-format>`
    :return address: an instance of :class:`<address>`
 
-   :description: 
+   :description:
       This is not a parsing function. For a string that is not well-formed,
       the address returned may be invalid, or otherwise nonsensical.
       Parsing should be performed by the UI, which should also undertake
@@ -708,12 +709,12 @@ Address Objects
 
 .. generic-function:: indirect-address
    :open:
-      
+
    Indirects through an address to generate a new address.
 
    :signature: indirect-address *server*, *address* => *i-address*
-   :param server: an instance of :class:`<server>`
-   :param address: an instance of :class:`<address>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter address: an instance of :class:`<address>`
    :return i-address: an instance of :class:`<address>`
 
    :description:
@@ -725,15 +726,15 @@ Address Objects
 
 .. generic-function:: indexed-address
    :open:
-      
+
    Adds an indexed-offset to a base address.
 
    :signature: indexed-address *server*, *addr*, *index*, *size* => *i-addr*
 
-   :param server: an instance of :class:`<server>`
-   :param addr: The base address, an instance of :class:`<address>`
-   :param index: An integer used as the index. An instance of :drm:`<integer>`
-   :param size: An instance of :class:`<data-display-size>`. The implementation
+   :parameter server: an instance of :class:`<server>`
+   :parameter addr: The base address, an instance of :class:`<address>`
+   :parameter index: An integer used as the index. An instance of :drm:`<integer>`
+   :parameter size: An instance of :class:`<data-display-size>`. The implementation
                 will multiply the index by the appropriate factor according
                 to this. The default is #"word".
    :return i-addr: an instance of :class:`<address>`
@@ -743,16 +744,16 @@ Address Objects
 
    :signature: address-read-memory-contents *server*, *addr*, ``#key`` *size*, *format*, *from-index*, *to-index* => *printable-strings*, *nxt*
 
-   :param server: an instance of :class:`<server>`
-   :param addr: The base address, an instance of :class:`<address>`
-   :param #key size: The granularity at which to read the data, defaults
+   :parameter server: an instance of :class:`<server>`
+   :parameter addr: The base address, an instance of :class:`<address>`
+   :parameter #key size: The granularity at which to read the data, defaults
 		     to ``#"word"``, the runtime platform word-size.
-   :param #key format: The format directive for the imported data.
+   :parameter #key format: The format directive for the imported data.
 		       An instance of :class:`<address-display-format>`
-   :param #key from-index: An index interpreted according to the ``size`` parameter,
+   :parameter #key from-index: An index interpreted according to the ``size`` parameter,
 		      from which to read the first object. Default zero.
 		      An instance of :drm:`<integer>`
-   :param #key to-index: An index 
+   :parameter #key to-index: An index
 		      from which to read the last object. Default 7
 		      An instance of :drm:`<integer>`
    :return printable-strings: an instance of :drm:`<sequence>`
@@ -765,17 +766,17 @@ Address Objects
 
 .. generic-function:: address-read-application-object
    :open:
-      
+
    Import an application object from an address.
 
    :signature: address-read-application-object *server*, *addr* => *obj*
 
-   :param server: The backend dispatching object. An instance of :class:`<server>`
-   :param addr: The address at which to base the import. An instance of :class:`<address-object>`
+   :parameter server: The backend dispatching object. An instance of :class:`<server>`
+   :parameter addr: The address at which to base the import. An instance of :class:`<address-object>`
    :return obj: An instance of :class:`false-or(<application-object>) <<application-object>>`
 		Returns the imported application object, or #f if the
                 import fails.
-      
+
 Register Objects
 ^^^^^^^^^^^^^^^^
 
@@ -788,7 +789,7 @@ Register Objects
 - :gf:`lookup-register-by-name`
 
 .. type:: <register-category>
-	  
+
    Describes an abstract categorization for the runtime register set.
 
    :equivalent: one of ``#"general-purpose"``,
@@ -798,7 +799,7 @@ Register Objects
 .. class:: <register-object>
 
    Represents a hardware-level register.
-   
+
    :superclasses: :class:`<application-object>`
 
    :keyword name: an instance of :drm:`false-or(<string>) <<string>>`
@@ -807,8 +808,8 @@ Register Objects
 .. function:: application-registers
 
    :signature: application-registers *server* ``#key`` *category* => *classes*
-   :param server: an instance of :class:`<server>`
-   :param #key category: an instance of :type:`<register-category>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter #key category: an instance of :type:`<register-category>`
    :return classes: an instance of :drm:`<sequence>`
 
 .. generic-function:: lookup-register-by-name
@@ -816,10 +817,10 @@ Register Objects
 
    Tries to find a register object corresponding to a given
    name.
-   
+
    :signature: lookup-register-by-name *server*, *name* => *reg*
-   :param server: an instance of :class:`<server>`
-   :param name: an instance of :drm:`<string>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter name: an instance of :drm:`<string>`
    :return reg: an instance of :class:`false-or(<register-object>) <<register-object>>`
 
    :description:
@@ -829,14 +830,14 @@ Register Objects
 
 .. generic-function:: do-application-registers
    :open:
-      
+
    Iterates over all runtime registers.
 
    :signature: do-application-registers *f*, *server* ``#key`` *category* => ()
 
-   :param f: an instance of :drm:`<function>`
-   :param server: an instance of :class:`<server>`
-   :param #key category: an instance of :type:`<register-category>`
+   :parameter f: an instance of :drm:`<function>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter #key category: an instance of :type:`<register-category>`
 
    :description:
       The function has signature ``(<register-object>) => ()``.
@@ -850,13 +851,13 @@ Register Objects
    :open:
 
    Retrieve the value stored in a register.
-      
+
    :signature: register-contents *server*, *reg*, *thread* ``#key`` *stack-frame-context* => *obj*
 
-   :param server: an instance of :class:`<server>`
-   :param reg: an instance of :class:`<register-object>`
-   :param thread: an instance of :class:`<thread-object>`
-   :param #key stack-frame-context: an instance of :class:`<stack-frame-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter reg: an instance of :class:`<register-object>`
+   :parameter thread: an instance of :class:`<thread-object>`
+   :parameter #key stack-frame-context: an instance of :class:`<stack-frame-object>`
    :return obj: an instance of :class:`false-or(<application-object>) <<application-object>>`
 
    :description:
@@ -874,13 +875,13 @@ Register Objects
    :open:
 
    Retrieve the value stored in a register, represented as an address.
-      
+
    :signature: register-contents *server*, *reg*, *thread* ``#key`` *stack-frame-context* => *obj*
 
-   :param server: an instance of :class:`<server>`
-   :param reg: an instance of :class:`<register-object>`
-   :param thread: an instance of :class:`<thread-object>`
-   :param #key stack-frame-context: an instance of :class:`<stack-frame-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter reg: an instance of :class:`<register-object>`
+   :parameter thread: an instance of :class:`<thread-object>`
+   :parameter #key stack-frame-context: an instance of :class:`<stack-frame-object>`
    :return obj: an instance of :class:`false-or(<address-object>) <<address-object>>`
 
    :description:
@@ -894,7 +895,7 @@ Register Objects
       the basic thread-local value will be used regardless of
       the frame context. The returned object is the register's context, interpreted as an
       address <application-object>.
-      
+
 Component Objects
 ^^^^^^^^^^^^^^^^^
 - :class:`<component-object>`
@@ -922,7 +923,7 @@ Component Objects
       ``environment-object-primitive-name`` for this class returns the name
       of the component as stripped of all platform-specific pathname
       and extension strings. Therefore, there is no ``component-name``
-      protocol.  
+      protocol.
 
 .. generic-function:: component-image-filename
    :open:
@@ -932,8 +933,8 @@ Component Objects
 
    :signature: component-image-filename *server*, *component* => *file*
 
-   :param server: an instance of :class:`<server>`
-   :param component: an instance of :class:`<component-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter component: an instance of :class:`<component-object>`
    :return file: an instance of :class:`false-or(<file-locator>) <<file-locator>>`
 
 .. generic-function:: component-version
@@ -941,10 +942,10 @@ Component Objects
 
    Return the version number of a component.
 
-   :signature: component-version *server*, *component* => *major-version-index*, *minor-version-index*   
+   :signature: component-version *server*, *component* => *major-version-index*, *minor-version-index*
 
-   :param server: an instance of :class:`<server>`
-   :param component: an instance of :class:`<component-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter component: an instance of :class:`<component-object>`
    :return major-version-index: an instance of :drm:`<integer>`
    :return minor-version-index: an instance of :drm:`<integer>`
 
@@ -958,15 +959,15 @@ Component Objects
 
    :signature: component-version *server*, *component* => *version-string*
 
-   :param server: an instance of :class:`<server>`
-   :param component: an instance of :class:`<component-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter component: an instance of :class:`<component-object>`
    :return version-string: an instance of :drm:`<string>`
 
 .. generic-function:: lookup-component-by-name
    :open:
 
    :signature: lookup-component-by-name *server*, *name* => *component*
-   :param server: an instance of :class:`<server>`
+   :parameter server: an instance of :class:`<server>`
    :return component: an instance of :class:`false-or(<component-object>) <<component-object>>`
    :return version-string: an instance of :drm:`<string>`
 
@@ -978,19 +979,19 @@ Component Objects
 
    :signature: do-application-components *f*, *server* => ()
 
-   :param f: an instance of :class:`<function>` with signature 
+   :parameter f: an instance of :class:`<function>` with signature
             ``(<component-object>) => ()``
-   :param server: an instance of :class:`<server>`
-   
+   :parameter server: an instance of :class:`<server>`
+
 .. function:: application-components
 
    Get a collection of all components
 
    :signature: application-components *server* => *components*
 
-   :param server: an instance of :class:`<server>`
+   :parameter server: an instance of :class:`<server>`
    :return components: an instance of :drm:`<sequence>`
-   
+
 Application and Compiler Objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1009,7 +1010,7 @@ Composite Objects
 - :class:`<composite-object>`
 - :gf:`composite-object-size`
 - :gf:`composite-object-contents`
-  
+
 .. class:: <composite-object>
    :abstract:
 
@@ -1019,48 +1020,48 @@ Composite Objects
    :open:
 
    :signature: composite-object-size *server*, *object*, ``#key`` *inherited?* => *size*
-   :param server:  an instance of :class:`<server>`
-   :param object: an instance of :class:`<composite-object>`
-   :param #key inherited?: an instance of :drm:`<boolean>`
-   :return size: an instance of :drm:`false-or(<integer>) <<integer>>`   
+   :parameter server:  an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<composite-object>`
+   :parameter #key inherited?: an instance of :drm:`<boolean>`
+   :return size: an instance of :drm:`false-or(<integer>) <<integer>>`
 
 .. generic-function:: composite-object-contents
    :open:
 
    :signature: composite-object-contents *server*, *object*, ``#key`` *inherited?* => *names*, *values*
-   :param server:  an instance of :class:`<server>`
-   :param object: an instance of :class:`<composite-object>`
-   :param #key inherited?: an instance of :drm:`<boolean>`
-   :return names: an instance of :drm:`<sequence>`   
-   :return values: an instance of :drm:`<sequence>`   
+   :parameter server:  an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<composite-object>`
+   :parameter #key inherited?: an instance of :drm:`<boolean>`
+   :return names: an instance of :drm:`<sequence>`
+   :return values: an instance of :drm:`<sequence>`
 
 User Objects
 ^^^^^^^^^^^^
 - :class:`<user-object>`
 - :gf:`user-object-slot-value`
 - :gf:`user-object-slot-values`
- 
+
 .. class:: <user-object>
-   
+
    :superclasses: :class:`<composite-object>` :class:`<environment-object-with-id>`
 
 .. generic-function:: user-object-slot-values
 
    :signature: user-object-slot-values *server*, *object* => *functions*, *values*
 
-   :param server: an instance of :class:`<server>`
-   :param object: an instance of :class:`<user-object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<user-object>`
    :return functions: an instance of :drm:`<sequence>`
    :return values: an instance of :drm:`<sequence>`
 
-.. generic-function:: user-object-slot-value   
+.. generic-function:: user-object-slot-value
    :open:
 
    :signature: user-object-slot-value *server*, *object*, *slot* ``#key`` *repeated-element* => *value*
-   :param server: an instance of :class:`<server>`
-   :param object: an instance of :class:`<user-object>`
-   :param slot: an type union of :class:`<definition-id>` and :class:`<slot-object>`
-   :param #key repeated-element: an instance of :drm:`<object>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<user-object>`
+   :parameter slot: an type union of :class:`<definition-id>` and :class:`<slot-object>`
+   :parameter #key repeated-element: an instance of :drm:`<object>`
    :return value: an instance of :class:`false-or(<environment-object>) <<environment-object>>`
 
 User Class Info
@@ -1140,7 +1141,7 @@ provided by the environment (e.g. a project)
    :open:
    :abstract:
 
-   :superclass: :class:`<dylan-application-object>` 
+   :superclass: :class:`<dylan-application-object>`
 
 .. class:: <dylan-compiler-object>
    :open:
@@ -1150,9 +1151,11 @@ provided by the environment (e.g. a project)
 
 
 .. constant:: $dylan-library-id
+
    :type: :class:`<library-id>`
 
 .. constant:: $dylan-module-id
+
    :type: :class:`<module-id>`
 
 .. constant:: $dylan-extensions-module-id
@@ -1168,6 +1171,7 @@ provided by the environment (e.g. a project)
    :type: :class:`<definition-id>`
 
 .. constant:: $<class>-id
+
    :type: :class:`<definition-id>`
 
 .. constant:: $<method>-id
@@ -1183,7 +1187,7 @@ provided by the environment (e.g. a project)
    :type: :class:`<definition-id>`
 
 
-   
+
 Dylan Expression Objects
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1213,7 +1217,7 @@ on the right-hand side of an assignment.
    :open:
 
    The canonical type expression of arbitrary complexity (only one instance)
-   
+
    :superclass: :class:`<type-expression-object>`
 
 Dylan Application Objects
@@ -1228,7 +1232,7 @@ Dylan Application Objects
 
 .. class:: <character-object>
 
-   :superclass: :class:`<immediate-application-object>` 
+   :superclass: :class:`<immediate-application-object>`
 
 .. class:: <string-object>
 
@@ -1236,11 +1240,11 @@ Dylan Application Objects
 
 .. class:: <symbol-object>
 
-   :superclass: :class:`<immediate-application-object>` 
+   :superclass: :class:`<immediate-application-object>`
 
 .. class:: <number-object>
 
-   :superclass: :class:`<immediate-application-object>` 
+   :superclass: :class:`<immediate-application-object>`
 
 .. class:: <integer-object>
 
@@ -1251,25 +1255,36 @@ Dylan Application Objects
 
    :signature: number-object-to-string *server*, *number*, ``#key`` *prefix?* *format* => *string*
 
-   :param server: an instance of :class:`<server>`
-   :param number: an instance of :class:`<number-object>`
-   :param #key prefix?: an instance of :drm:`<boolean>`
-   :param #key format: an instance of :drm:`false-or(<symbol>) <<symbol>>`   
+   :parameter server: an instance of :class:`<server>`
+   :parameter number: an instance of :class:`<number-object>`
+   :parameter #key prefix?: an instance of :drm:`<boolean>`
+   :parameter #key format: an instance of :drm:`false-or(<symbol>) <<symbol>>`
    :return string: an instance of :drm:`false-or(<string>) <<string>>`
-   
+
 Boolean Objects
 ^^^^^^^^^^^^^^^
 
 - :class:`<boolean-object>`
-- :func:`boolean-object-true?`
 - :const:`$true-object`
 - :const:`$false-object`
 
 .. class:: <boolean-object>
 
-   :superclass: :class:`<immediate-application-object>` 
-   :keyword true?: an instance of :drm:`<boolean>`
+   :superclass: :class:`<immediate-application-object>`
+   :keyword true?: an instance of :drm:`<boolean>`. Required.
    :slot boolean-object-true?:
+
+.. constant:: $true-object
+
+   :type: :class:`<boolean-object>`
+
+.. constant:: $false-object
+
+   :type: :class:`<boolean-object>`
+
+
+Collection Objects
+^^^^^^^^^^^^^^^^^^
 
 - :class:`<collection-object>`
 - :class:`<sequence-object>`
@@ -1277,6 +1292,124 @@ Boolean Objects
 - :class:`<array-object>`
 - :class:`<range-object>`
 - :class:`<pair-object>`
+- :gf:`collection-size`
+- :gf:`collection-keys`
+- :gf:`collection-elements`
+- :gf:`do-collection-keys`
+- :gf:`do-collection-elements`
+- :gf:`range-start`
+- :gf:`range-end`
+- :gf:`range-by`
+- :gf:`pair-head`
+- :gf:`pair-tail`
+
+.. class:: <collection-object>
+
+   :superclasses: :class:`<composite-object>` :class:`<dylan-application-object>`
+
+.. class:: <sequence-object>
+
+   :superclass: :class:`<collection-object>`
+
+.. class:: <explicit-key-collection-object>
+
+   :superclasses: :class:`<internal-object>` :class:`<collection-object>`
+
+.. class:: <range-object>
+
+   :superclasses: :class:`<user-object>` :class:`<sequence-object>`
+
+   Note: ranges are user objects, not internal objects, because
+   the "Contents" page is the only way to browse ranges.
+
+.. class:: <pair-object>
+
+   :superclass: :class:`<user-object>`
+
+   Note: This only models non-proper lists, so it isn't a sequence object
+
+.. generic-function:: collection-size
+   :open:
+
+   :signature: collection-size *server*, *collection* => *size*
+   :parameter server: an instance of :class:`<server>`
+   :parameter collection: an instance of :class:`<collection-object>`
+   :returns size: an instance of :drm:`false-or(<integer>) <<integer>>`
+
+.. generic-function:: do-collection-keys
+   :open:
+
+   :signature: do-collection-keys *function*, *server*, *collection* => ()
+   :parameter function: an instance of :drm:`<function>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter collection: an instance of :class:`<collection-object>`
+
+.. generic-function:: do-collection-elements
+   :open:
+
+   :signature: do-collection-keys *function*, *server*, *collection* => ()
+   :parameter function: an instance of :drm:`<function>`
+   :parameter server: an instance of :class:`<server>`
+   :parameter collection: an instance of :class:`<collection-object>`
+
+.. generic-function:: collection-keys
+   :open:
+
+   :signature: collection-keys *server*, *collection* ``#key`` range => *keys*
+   :parameter server: an instance of :class:`<server>`
+   :parameter collection: an instance of :class:`<collection-object>`
+   :parameter #key range: an instance of :drm:`<range>`
+   :return keys: an instance of :drm:`<sequence>`
+
+.. generic-function:: collection-values
+   :open:
+
+   :signature: collection-values *server*, *collection* ``#key`` range => *values*
+   :parameter server: an instance of :class:`<server>`
+   :parameter collection: an instance of :class:`<collection-object>`
+   :parameter #key range: an instance of :drm:`<range>`
+   :return values: an instance of :drm:`<sequence>`
+
+.. generic-function:: range-start
+   :open:
+
+   :signature: range-start *server*, *range* => *start*
+   :parameter server: an instance of :class:`<server>`
+   :parameter range: an instance of :class:`<range-object>`
+   :return start: an instance of :class:`false-or(<number-object>) <<number-object>>`
+
+.. generic-function:: range-end
+   :open:
+
+   :signature: range-end *server*, *range* => *end*
+   :parameter server: an instance of :class:`<server>`
+   :parameter range: an instance of :class:`<range-object>`
+   :return end: an instance of :class:`false-or(<number-object>) <<number-object>>`
+
+.. generic-function:: range-by
+   :open:
+
+   :signature: range-by *server*, *range* => *start*
+   :parameter server: an instance of :class:`<server>`
+   :parameter range: an instance of :class:`<range-object>`
+   :return by: an instance of :class:`false-or(<number-object>) <<number-object>>`
+
+.. generic-function:: pair-head
+   :open:
+
+   :signature: pair-head *server*, *pair* => *head*
+   :parameter server: an instance of :class:`<server>`
+   :parameter pair: an instance of :class:`<pair-object>`
+   :return head: an instance of :class:`false-or(<application-object>) <<application-object>>`
+
+.. generic-function:: pair-tail
+   :open:
+
+   :signature: pair-tail *server*, *pair* => *tail*
+   :parameter server: an instance of :class:`<server>`
+   :parameter pair: an instance of :class:`<pair-object>`
+   :return tail: an instance of :class:`false-or(<application-object>) <<application-object>>`
+
 - :class:`<source-form-object>`
 - :class:`<macro-call-object>`
 - :class:`<simple-macro-call-object>`
@@ -1453,4 +1586,3 @@ Environment Protocols Module Constants
       * ``#"hyper"`` - 64-bit value
       * ``#"float"`` - Single-precision floating-point value
       * ``#"double"`` -Double-precision floating-point value
-
