@@ -34,6 +34,8 @@ are classified according to the sub-sections below.
 - :ref:`Foreign Objects`
 - :ref:`Dylan Objects`
 - :ref:`Dylan Expression Objects`
+- :ref:`Dylan Application Objects`
+- :ref:`Boolean Objects`
 
 
 Server Objects
@@ -1214,21 +1216,54 @@ on the right-hand side of an assignment.
    
    :superclass: :class:`<type-expression-object>`
 
-Dylan application objects
+Dylan Application Objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 - :class:`<character-object>`
 - :class:`<string-object>`
 - :class:`<symbol-object>`
 - :class:`<number-object>`
 - :class:`<integer-object>`
+- :func:`number-object-to-string`
+
 
 .. class:: <character-object>
 
    :superclass: :class:`<immediate-application-object>` 
 
+.. class:: <string-object>
+
+   :superclass: :class:`<sequence-object>`
+
 .. class:: <symbol-object>
 
    :superclass: :class:`<immediate-application-object>` 
+
+.. class:: <number-object>
+
+   :superclass: :class:`<immediate-application-object>` 
+
+.. class:: <integer-object>
+
+   :superclass: :class:`<number-object>`
+
+.. generic-function:: number-object-to-string
+   :open:
+
+   :signature: number-object-to-string *server*, *number*, ``#key`` *prefix?* *format* => *string*
+
+   :param server: an instance of :class:`<server>`
+   :param number: an instance of :class:`<number-object>`
+   :param #key prefix?: an instance of :drm:`<boolean>`
+   :param #key format: an instance of :drm:`false-or(<symbol>) <<symbol>>`   
+   :return string: an instance of :drm:`false-or(<string>) <<string>>`
+   
+Boolean Objects
+^^^^^^^^^^^^^^^
+
+- :class:`<boolean-object>`
+- :func:`boolean-object-true?`
+- :const:`$true-object`
+- :const:`$false-object`
 
 .. class:: <boolean-object>
 
@@ -1236,8 +1271,6 @@ Dylan application objects
    :keyword true?: an instance of :drm:`<boolean>`
    :slot boolean-object-true?:
 
-
-- :class:`<boolean-object>`
 - :class:`<collection-object>`
 - :class:`<sequence-object>`
 - :class:`<explicit-key-collection-object>`
