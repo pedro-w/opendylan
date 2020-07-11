@@ -37,7 +37,7 @@ are classified according to the sub-sections below.
 - :ref:`Dylan Application Objects`
 - :ref:`Boolean Objects`
 - :ref:`Collection Objects`
-
+- :ref:`Source Forms`
 
 Server Objects
 ^^^^^^^^^^^^^^
@@ -1410,7 +1410,91 @@ Collection Objects
    :parameter pair: an instance of :class:`<pair-object>`
    :return tail: an instance of :class:`false-or(<application-object>) <<application-object>>`
 
+Source Forms
+^^^^^^^^^^^^
+
 - :class:`<source-form-object>`
+- :gf:`do-used-definitions`
+- :gf:`do-client-source-forms`
+- :gf:`source-form-has-clients?`
+- :gf:`source-form-uses-definitions?`
+- :func:`source-form-used-definitions`
+- :func:`source-form-clients`
+
+.. class:: <source-form-object>
+   :open:
+   :abstract:
+
+   :superclasses: :class:`<application-code-object>`
+		  :class:`<application-and-compiler-object>`
+		  :class:`<environment-object-with-id>`
+
+.. generic-function:: do-used-definitions
+   :open:
+
+   :signature: do-used-definitions *function*,  *server*, *object*, ``#key`` *modules* *libraries* *client* => ()
+   :param function: an instance of :drm:`<function>`
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<source-form-object>`
+   :param #key modules:
+   :param #key libraries:
+   :param #key client:
+	       
+.. generic-function:: do-used-definitions
+   :open:
+
+   :signature: do-client-source-forms *function*,  *server*, *object*, ``#key`` *modules* *libraries* *client* => ()
+   :param function: an instance of :drm:`<function>`
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<source-form-object>`
+   :param #key modules:
+   :param #key libraries:
+   :param #key client:
+	       
+.. generic-function:: source-form-has-clients?
+   :open:
+
+   :signature: source-form-has-clients? *server*, *object*, ``#key`` *modules* *libraries* *client* => *uses-definitions?*
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<source-form-object>`
+   :param #key modules:
+   :param #key libraries:
+   :param #key client:
+   :return has-clients?: an instance of :drm:`<boolean>`
+
+.. generic-function:: source-form-uses-definitions?
+   :open:
+
+   :signature: source-form-uses-definitions? *server*, *object*, ``#key`` *modules* *libraries* *client* => *uses-definitions?*
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<source-form-object>`
+   :param #key modules:
+   :param #key libraries:
+   :param #key client:
+   :return uses-definitions?: an instance of :drm:`<boolean>`
+
+.. function:: source-form-used-definitions
+	      
+   :signature: source-form-used-definitions *server*, *object*, ``#key`` *modules* *libraries* *client* => *used-definitions*
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<source-form-object>`
+   :param #key modules:
+   :param #key libraries:
+   :param #key client:
+   :return used-definitions: an instance of :drm:`<sequence>`	      
+
+.. function:: source-form-clients
+	      
+   :signature: source-form-clients *server*, *object*, ``#key`` *modules* *libraries* *client* => *clients*
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<source-form-object>`
+   :param #key modules:
+   :param #key libraries:
+   :param #key client:
+   :return clients: an instance of :drm:`<sequence>`	      
+
+Macro Calls
+^^^^^^^^^^^
 - :class:`<macro-call-object>`
 - :class:`<simple-macro-call-object>`
 - :class:`<top-level-expression-object>`
