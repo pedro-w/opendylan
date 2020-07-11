@@ -38,6 +38,8 @@ are classified according to the sub-sections below.
 - :ref:`Boolean Objects`
 - :ref:`Collection Objects`
 - :ref:`Source Forms`
+- :ref:`Macro Calls`
+- :ref:`Non-Definition Source Forms`  
 
 Server Objects
 ^^^^^^^^^^^^^^
@@ -1496,9 +1498,52 @@ Source Forms
 Macro Calls
 ^^^^^^^^^^^
 - :class:`<macro-call-object>`
+- :gf:`do-macro-call-source-forms`
+- :func:`macro-call-source-forms`
+
+
+.. class:: <macro-call-object>
+   :abstract:
+
+   :superclass: :class:`<source-form-object>`
+
+.. generic-function:: do-macro-call-source-forms
+   :open:
+
+   :signature: do-macro-call-source-forms *function*, *server*, *object* => ()
+   :param function: an instance of :drm:`<function>`
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<macro-call-object>`
+
+.. function:: macro-call-source-forms
+
+   :signature: macro-call-source-forms *server*, *object* => *source-forms*
+   :param server: an instance of :class:`<server>`
+   :param object: an instance of :class:`<macro-call-object>`
+   :return source-forms: an instance of :drm:`<sequence>`
+			 
+Non-definition source forms
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - :class:`<simple-macro-call-object>`
 - :class:`<top-level-expression-object>`
+
+.. class:: <simple-macro-call-object>
+
+   :superclasses: :class:`<top-level-expression-object>`
+		  :class:`<macro-call-object>`
+
+.. class:: <top-level-expression-object>
+
+   :superclass: :class:`<source-form-object>`
+
+Definition Objects
+^^^^^^^^^^^^^^^^^^
 - :class:`<definition-object>`
+definition-modifiers
+definition-interactive-locations
+definition-known-locations
+find-named-definition
+  
 - :class:`<breakpoint-object>`
 - :class:`<environment-object-breakpoint-object>`
 - :class:`<class-breakpoint-object>`
