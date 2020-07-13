@@ -40,6 +40,7 @@ are classified according to the sub-sections below.
 - :ref:`Source Forms`
 - :ref:`Macro Calls`
 - :ref:`Non-Definition Source Forms`  
+- :ref:`Definition Objects`
 
 Server Objects
 ^^^^^^^^^^^^^^
@@ -1540,9 +1541,9 @@ Definition Objects
 ^^^^^^^^^^^^^^^^^^
 - :class:`<definition-object>`
 - :gf:`definition-modifiers`
-- :gf: `definition-interactive-locations`
-- :gf: `definition-known-locations`
-- :func: `find-named-definition`
+- :gf:`definition-interactive-locations`
+- :gf:`definition-known-locations`
+- :func:`find-named-definition`
 
 .. class:: <definition-object>
    :open:
@@ -1556,7 +1557,7 @@ Definition Objects
    :signature: definition-modifiers *server*, *object* => *modifiers*
    :parameter server: an instance of :class:`<server>`
    :parameter object: an instance of :class:`<definition-object>`
-   :returns modifiers: an instance of :drm:`<sequence>`. Each modifier is a :drm:`<symbol>`
+   :return modifiers: an instance of :drm:`<sequence>`. Each modifier is a :drm:`<symbol>`
 
 .. generic-function:: definition-interactive-locations
    :open:
@@ -1564,7 +1565,7 @@ Definition Objects
    :signature: definition-interactive-locations *server*, *object* => *locations*
    :parameter server: an instance of :class:`<server>`
    :parameter object: an instance of :class:`<definition-object>`
-   :returns locations: an instance of :drm:`<sequence>`
+   :return locations: an instance of :drm:`<sequence>`
 
 .. generic-function:: definition-known-locations
    :open:
@@ -1572,7 +1573,7 @@ Definition Objects
    :signature: definition-known-locations *server*, *object* => *locations*
    :parameter server: an instance of :class:`<server>`
    :parameter object: an instance of :class:`<definition-object>`
-   :returns locations: an instance of :drm:`<sequence>`
+   :return locations: an instance of :drm:`<sequence>`
 
 .. function:: find-named-definition
 
@@ -1581,7 +1582,7 @@ Definition Objects
    :parameter module: an instance of :class:`<module>`
    :parameter name: an instance of :drm:`<string>`
    :parameter #key imported?: an instance of :drm:`<boolean>`, default ``#t``
-   :returns definition: an instance of :class:`false-or(<definition-object>) <<definition-object>>`
+   :return definition: an instance of :class:`false-or(<definition-object>) <<definition-object>>`
       
   
 - :class:`<breakpoint-object>`
