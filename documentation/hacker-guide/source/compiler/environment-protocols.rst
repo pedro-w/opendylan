@@ -1539,10 +1539,50 @@ Non-definition source forms
 Definition Objects
 ^^^^^^^^^^^^^^^^^^
 - :class:`<definition-object>`
-definition-modifiers
-definition-interactive-locations
-definition-known-locations
-find-named-definition
+- :gf:`definition-modifiers`
+- :gf: `definition-interactive-locations`
+- :gf: `definition-known-locations`
+- :func: `find-named-definition`
+
+.. class:: <definition-object>
+   :open:
+   :abstract:
+
+   :superclasses: :class:`<macro-call-object>` :class:`<dylan-object>` :class:`<environment-object-with-id>`
+
+.. generic-function:: definition-modifiers
+   :open:
+
+   :signature: definition-modifiers *server*, *object* => *modifiers*
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<definition-object>`
+   :returns modifiers: an instance of :drm:`<sequence>`. Each modifier is a :drm:`<symbol>`
+
+.. generic-function:: definition-interactive-locations
+   :open:
+
+   :signature: definition-interactive-locations *server*, *object* => *locations*
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<definition-object>`
+   :returns locations: an instance of :drm:`<sequence>`
+
+.. generic-function:: definition-known-locations
+   :open:
+
+   :signature: definition-known-locations *server*, *object* => *locations*
+   :parameter server: an instance of :class:`<server>`
+   :parameter object: an instance of :class:`<definition-object>`
+   :returns locations: an instance of :drm:`<sequence>`
+
+.. function:: find-named-definition
+
+   :signature: find-named-definition *project*, *module*, *name* ``#key`` *imported* => *definition*
+   :parameter project: an instance of :class:`<project>`
+   :parameter module: an instance of :class:`<module>`
+   :parameter name: an instance of :drm:`<string>`
+   :parameter #key imported?: an instance of :drm:`<boolean>`, default ``#t``
+   :returns definition: an instance of :class:`false-or(<definition-object>) <<definition-object>>`
+      
   
 - :class:`<breakpoint-object>`
 - :class:`<environment-object-breakpoint-object>`
