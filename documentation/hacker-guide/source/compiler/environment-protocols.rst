@@ -1584,7 +1584,12 @@ Definition Objects
    :parameter #key imported?: an instance of :drm:`<boolean>`, default ``#t``
    :return definition: an instance of :class:`false-or(<definition-object>) <<definition-object>>`
       
-  
+Breakpoints
+^^^^^^^^^^^
+
+There are many symbols associated with breakpoints. These are
+not documented yet.
+
 - :class:`<breakpoint-object>`
 - :class:`<environment-object-breakpoint-object>`
 - :class:`<class-breakpoint-object>`
@@ -1595,6 +1600,55 @@ Definition Objects
 - :class:`<source-location-breakpoint-object>`
 - :class:`<breakpoint-state>`
 - :class:`<breakpoint-direction>`
+- :const:`$default-breakpoint-stop?`
+- :const:`$default-breakpoint-message?`
+- :const:`$default-breakpoint-transient?`
+- :const:`$default-breakpoint-enabled?`
+- :const:`$default-breakpoint-profile?`
+- :const:`$default-breakpoint-test`
+- :const:`$default-breakpoint-entry-function?`
+- :const:`$default-breakpoint-directions`
+
+- :func:`destroy-breakpoint`
+- :func:`initialize-breakpoint`
+- :func:`reinitialize-breakpoint`
+- :func:`do-generic-breakpoint-methods`
+- :func:`current-stop-breakpoints`
+- :func:`find-breakpoint`
+- :func:`project-breakpoints`
+- :func:`source-location-breakpoints`
+- :func:`environment-object-breakpoints`
+- :func:`breakpoint-object`
+- :func:`breakpoint-object-setter`
+- :func:`breakpoint-project`
+- :func:`breakpoint-stop?`
+- :func:`breakpoint-stop?-setter`
+- :func:`breakpoint-message?`
+- :func:`breakpoint-message?-setter`
+- :func:`breakpoint-transient?`
+- :func:`breakpoint-transient?-setter`
+- :func:`breakpoint-enabled?`
+- :func:`breakpoint-enabled?-setter`
+- :func:`breakpoint-profile?`
+- :func:`breakpoint-profile?-setter`
+- :func:`breakpoint-test`
+- :func:`breakpoint-test-setter`
+- :func:`breakpoint-entry-function?`
+- :func:`breakpoint-entry-function?-setter`
+- :func:`breakpoint-entry-point?`
+- :func:`breakpoint-entry-point?-setter`
+- :func:`breakpoint-directions`
+- :func:`breakpoint-directions-setter`
+- :func:`note-breakpoint-state-changed`
+- :func:`server-note-breakpoint-state-changed`
+- :func:`\with-compressed-breakpoint-state-changes`
+- :func:`do-with-compressed-breakpoint-state-changes`
+- :func:`note-breakpoint-state-changes-failed`
+- :func:`trace-function`
+
+Thread Objects
+^^^^^^^^^^^^^^
+
 - :class:`<thread-object>`
 - :class:`<restart-object>`
 - :class:`<machine>`
