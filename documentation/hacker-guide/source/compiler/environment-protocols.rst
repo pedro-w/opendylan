@@ -41,6 +41,7 @@ are classified according to the sub-sections below.
 - :ref:`Macro Calls`
 - :ref:`Non-Definition Source Forms`  
 - :ref:`Definition Objects`
+- :ref:`Compiler Databases`
 
 Server Objects
 ^^^^^^^^^^^^^^
@@ -1608,7 +1609,6 @@ not documented yet.
 - :const:`$default-breakpoint-test`
 - :const:`$default-breakpoint-entry-function?`
 - :const:`$default-breakpoint-directions`
-
 - :func:`destroy-breakpoint`
 - :func:`initialize-breakpoint`
 - :func:`reinitialize-breakpoint`
@@ -1649,13 +1649,129 @@ not documented yet.
 Thread Objects
 ^^^^^^^^^^^^^^
 
+No further documentation on thread objects.
+
 - :class:`<thread-object>`
+- :func:`thread-stack-trace`
+- :func:`thread-complete-stack-trace`
+- :func:`thread-index`
+- :func:`thread-state`
+- :func:`thread-runtime-state`
+- :func:`thread-runtime-state-setter`
+- :func:`thread-suspended?`
+- :func:`thread-suspended?-setter`
+- :func:`create-application-thread`
+- :func:`suspend-application-thread`
+- :func:`resume-application-thread`
+- :func:`thread-current-interactor-level`
+- :func:`add-application-object-to-thread-history`
+- :func:`application-default-interactor-thread`
+
+Restarts
+^^^^^^^^
+
+No further documentation on restarts.
+
 - :class:`<restart-object>`
+- :func:`application-thread-restarts`
+- :func:`application-restart-message`
+- :func:`application-restart-abort?`
+- :func:`invoke-application-restart`
+
+Machines
+^^^^^^^^
+
+No further documentation on Machines.
+
 - :class:`<machine>`
+- :func:`machine-network-address`
+- :func:`machine-hostname`
+- :func:`environment-host-machine`
+- :func:`do-machine-connections`
+- :func:`close-connection-to-machine`
+- :func:`machine-connection-open?`
+- :func:`<remote-debug-connection-error>`
+- :func:`<remote-connection-closed-error>`
+- :func:`<remote-connection-failed-error>`
+- :func:`<remote-connection-password-mismatch-error>`
+- :func:`failed-connection`
+- :func:`failed-network-address`
+- :func:`failed-password`
+- :func:`<attempted-to-close-local-connection>`
+
+Processes
+^^^^^^^^^
+
+Processes are not further documented.
+
+- :class:`<process>`
+- :func:`process-host-machine`
+- :func:`process-executable-file`
+- :func:`process-id`
+- :func:`lookup-process-by-id`
+- :func:`process-debuggable?`
+- :func:`do-active-processes`
+- :func:`do-processes-on-machine`
+
+Applications
+^^^^^^^^^^^^
+
+Applications are not further documented.
+
 - :class:`<application>`
 - :class:`<application-state>`
 - :class:`<application-startup-option>`
+- :func:`\with-application-transaction`
+- :func:`perform-application-transaction`
+- :func:`application-startup-option`
+- :func:`application-client`
+- :func:`application-machine`
+- :func:`application-filename`
+- :func:`application-arguments`
+- :func:`application-temporary-stop?`
+- :func:`application-temporary-stop?-setter`
+- :func:`application-state`
+- :func:`application-state-setter`
+- :func:`application-threads`
+- :func:`application-running?`
+- :func:`application-stopped?`
+- :func:`application-closed?`
+- :func:`application-tethered?`
+- :func:`application-pause-before-termination?`
+- :func:`application-just-hit-breakpoint?`
+- :func:`application-just-hit-dylan-error?`
+- :func:`application-just-hit-error?`
+- :func:`application-just-interacted?`
+- :func:`application-just-stepped?`
+- :func:`application-stop-reason-message`
+- :func:`close-application`
+- :func:`continue-application`
+- :func:`ensure-application-proxy`
+- :func:`find-application-proxy`
+- :func:`application-proxy-id`
+- :func:`run-application`
+- :func:`initialize-application-client`
+- :func:`attach-live-application`
+- :func:`note-run-application-failed`
+- :func:`stop-application`
+- :func:`make-project-application`
+- :func:`step-application-into`
+- :func:`step-application-over`
+- :func:`step-application-out`
+- :func:`update-application`
+- :func:`note-application-initialized`
+
+Compiler Databases
+^^^^^^^^^^^^^^^^^^
+
 - :class:`<compiler-database>`
+- :func:`ensure-database-proxy`
+- :func:`find-compiler-database-proxy`
+- :func:`compiler-database-proxy-id`
+- :func:`invalidate-compiler-database`
+
+Project Objects
+^^^^^^^^^^^^^^^
 - :class:`<project-object>`
 - :class:`<compilation-mode>`
 - :class:`<project-target-type>`
