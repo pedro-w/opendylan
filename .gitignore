@@ -55,3 +55,5 @@
 /sources/corba/tests/idl/protocol/
 /sources/corba/tests/idl/skeletons/
 /sources/corba/tests/idl/stubs/
+_build
+_test
