@@ -341,9 +341,9 @@ Environment Objects
 
    :parameter server:  an instance of :class:`<server>`
    :parameter object: an instance of :class:`<environment-object>`
-   :parameter namespace: an instance of :class:`false-or(<namespace-object> <<namespace-object>>`
+   :parameter namespace: an instance of :class:`false-or(<namespace-object>) <<namespace-object>>`
 
-   :return: name:  an instance of :drm:`false-or(<string>) <<string>>`
+   :return name:  an instance of :drm:`false-or(<string>) <<string>>`
 
 .. generic-function:: environment-object-unique-name
    :open:
@@ -354,7 +354,7 @@ Environment Objects
    :parameter object: an instance of :class:`<environment-object>`
    :parameter namespace: an instance of :class:`false-or(<namespace-object> <<namespace-object>>`
 
-   :return: name:  an instance of :drm:`false-or(<string>) <<string>>`
+   :return name:  an instance of :drm:`false-or(<string>) <<string>>`
 
 .. generic-function:: environment-object-type
    :open:
@@ -363,7 +363,7 @@ Environment Objects
    :parameter server:  an instance of :class:`<server>`
    :parameter object: an instance of :class:`<environment-object>`
 
-   :return: type: an instance of :class:`<environment-object>`
+   :return type: an instance of :class:`<environment-object>`
 
 .. generic-function:: environment-object-type-name
    :open:
@@ -371,7 +371,7 @@ Environment Objects
    :signature: environment-object-type-name *object* => *type*
    :parameter object: an instance of :class:`<environment-object>`
 
-   :return: type-name: an instance of :drm:`<string>`
+   :return type-name: an instance of :drm:`<string>`
 
 .. generic-function:: environment-object-source
    :open:
@@ -1799,19 +1799,16 @@ Project Objects
 ^^^^^^^^^^^^^^^
 
 - :class:`<project-object>`
-- :class:`<compilation-mode>`
-- :class:`<project-target-type>`
-- :class:`<project-interface-type>`
+- :const:`<compilation-mode>`
+- :const:`<project-target-type>`
+- :const:`<project-interface-type>`
 - :func:`active-project`
 - :func:`active-project-setter`
 - :func:`project-name`
-- :func:`project-properties`
-- :func:`project-properties-setter`
-- :func:`project-proxy`
-- :func:`project-proxy-setter`
-- :func:`project-application`
-- :func:`project-application-setter`
-- :func:`project-compiler-database`
+- :gf:`project-proxy`
+- :gf:`project-application`
+
+- :gf:`project-compiler-database`
 - :func:`project-compiler-database-setter`
 - :func:`project-database-changed?`
 - :func:`project-sources-changed?`
@@ -1819,90 +1816,170 @@ Project Objects
 - :func:`project-opened-by-user?-setter`
 - :func:`project-used-libraries`
 - :func:`project-used-projects`
+- :func:`do-project-used-libraries`
+- :func:`do-project-file-libraries`
+- :func:`do-used-projects`
+- :func:`edit-source-location`
+- :func:`edit-source-record`
+- :func:`edit-definition`
+- :gf:`open-project`
+- :gf:`find-project`
+- :gf:`create-new-user-project`
+- :gf:`open-project-from-file`
+- :func:`create-exe-project-from-file`
+- :func:`import-project-from-file`
+- :func:`close-project`
+- :func:`project-add-source-record`
+- :func:`project-remove-source-record`
+- :func:`project-reorder-source-records`
+- :func:`save-project`
+- :func:`save-project-database`
+- :func:`open-projects`
+- :func:`current-project,`
+- :func:`current-project-setter`
+- :func:`project-library`
+- :func:`project-start-function-name,`
+- :func:`project-start-function-name-setter`
+- :func:`project-start-function`
+- :func:`project-read-only?`
+- :func:`project-can-be-built?`
+- :func:`project-can-be-debugged?`
+- :func:`project-compiled?`
+- :func:`project-sources`
+- :func:`project-canonical-sources`
+- :func:`project-canonical-source-record`
+- :func:`project-canonical-filename`
+- :func:`project-other-sources`
+- :func:`project-directory`
+- :func:`project-filename`
+- :func:`project-build-filename,`
+- :func:`project-build-filename-setter`
+- :func:`project-full-build-filename`
+- :func:`project-debug-filename,`
+- :func:`project-debug-filename-setter`
+- :func:`project-debug-arguments,`
+- :func:`project-debug-arguments-setter`
+- :func:`project-debug-machine-address,`
+- :func:`project-debug-machine-address-setter`
+- :func:`project-debug-machine,`
+- :func:`project-debug-machine-setter`
+- :func:`project-debug-directory,`
+- :func:`project-debug-directory-setter`
+- :func:`project-build-directory`
+- :func:`project-bin-directory`
+- :func:`project-release-directory`
+- :func:`project-server-path`
+- :func:`project-compilation-mode,`
+- :func:`project-compilation-mode-setter`
+- :func:`project-compiler-back-end`
+- :func:`project-compiler-back-end-setter`
+- :func:`project-executable-name,`
+- :func:`project-executable-name-setter`
+- :func:`project-target-type,`
+- :func:`project-target-type-setter`
+- :func:`project-interface-type,`
+- :func:`project-interface-type-setter`
+- :func:`project-base-address,`
+- :func:`project-base-address-setter`
+- :func:`project-major-version,`
+- :func:`project-major-version-setter`
+- :func:`project-minor-version,`
+- :func:`project-minor-version-setter`
+- :func:`find-project-source-record`
+- :func:`find-source-record-library`
+- :func:`session-property`
+- :func:`session-property-setter`
+- :func:`source-record-top-level-forms`
+- :func:`source-record-projects`
+- :func:`source-record-colorization-info`
+- :func:`open-project-compiler-database`
+- :func:`parse-project-source`
+- :func:`build-project`
+- :func:`clean-project`
+- :func:`link-project`
+- :func:`note-user-project-opened`
 
+.. class:: <project-object>
+   :open:
+   :abstract:
+   :primary:
 
-do-project-used-libraries,
-do-project-file-libraries,
-do-used-projects,
-edit-source-location,
-edit-source-record,
-edit-definition,
-open-project,
-find-project,
-create-new-user-project,
-open-project-from-file,
-create-exe-project-from-file,
-import-project-from-file,
-close-project,
-project-add-source-record,
-project-remove-source-record,
-project-reorder-source-records,
-save-project,
-save-project-database,
-open-projects,
-current-project, 
-current-project-setter,
-project-library,
-project-start-function-name, 
-project-start-function-name-setter,
-project-start-function,
-project-read-only?,
-project-can-be-built?,
-project-can-be-debugged?,
-project-compiled?,
-project-sources,
-project-canonical-sources,
-project-canonical-source-record,
-project-canonical-filename,
-project-other-sources,
-project-directory,
-project-filename,
-project-build-filename, 
-project-build-filename-setter,
-project-full-build-filename,
-project-debug-filename, 
-project-debug-filename-setter,
-project-debug-arguments, 
-project-debug-arguments-setter,
-project-debug-machine-address, 
-project-debug-machine-address-setter,
-project-debug-machine, 
-project-debug-machine-setter,
-project-debug-directory, 
-project-debug-directory-setter,
-project-build-directory,
-project-bin-directory,
-project-release-directory,
-project-server-path,
-project-compilation-mode, 
-project-compilation-mode-setter,
-project-compiler-back-end,
-project-compiler-back-end-setter,
-project-executable-name, 
-project-executable-name-setter,
-project-target-type, 
-project-target-type-setter,
-project-interface-type, 
-project-interface-type-setter,
-project-base-address, 
-project-base-address-setter,
-project-major-version, 
-project-major-version-setter,
-project-minor-version, 
-project-minor-version-setter,
-find-project-source-record,
-find-source-record-library,
-session-property,
-session-property-setter,
-source-record-top-level-forms,
-source-record-projects,
-source-record-colorization-info,
-open-project-compiler-database,
-parse-project-source,
-build-project,
-clean-project,
-link-project,
-note-user-project-opened
+   :superclasses: :class:`<server>` :class:`<environment-object>`
+   :keyword proxy:  An instance of :drm:`<object>`
+   :keyword application: An instance of :class:`false-or(<application>) <<application>>`
+   :keyword compiler-database: An instance of :class:`false-or(<compiler-database>) <<compiler-database>>`
+   :keyword server-path: An instance of :class:`<server-path-type>`
+   :slot project-proxy: An instance of :drm:`<object>`
+   :slot project-application: An instance of :class:`false-or(<application>) <<application>>`, default #f
+   :slot project-compiler-database: An instance of :class:`false-or(<compiler-database>) <<compiler-database>>`, default #f
+   :slot project-next-numeric-id: An instance of :drm:`<integer>`
+   :slot project-object-table: An instance of :drm:`<table>`
+   :slot project-query-database: An instance of :drm:`<table>`
+   :slot project-server-path: An instance of :class:`<server-path-type>`
+   :slot environment-object-breakpoints: An instance of :drm:`<collection>`
+   :slot source-location-breakpoints: An instance of :drm:`<collection>`
+   :slot project-properties: An instance of :drm:`<list>`
+   :slot project-profile-state: An instance of :class:`<profile-state>`
+   
+.. constant:: <compilation-mode>
+
+   One of ``#"loose"``, ``#"tight"``
+
+.. constant:: <project-target-type>
+
+   One of ``#"executable"``, ``#"dll"``
+
+.. constant:: <project-interface-type>
+
+   One of ``#"console"``, ``#"gui"``
+
+.. function:: active-project
+
+   Get the currently active project.
+
+   :signature: active-project () => *project*
+   :return project: An instance of :class:`false-or(<project-object>) <<project-object>>` 
+
+.. function:: active-project-setter
+
+   Set the currently active project. Broadcasts a :class:`<project-now-active-message>` or 
+   a :class:`<no-active-project>` message.
+
+   :signature: active-project-setter *project* => *project*
+   :parameter project: The project to set, an instance of :class:`false-or(<project-object>) <<project-object>>`
+   :return project: An instance of :class:`false-or(<project-object>) <<project-object>>` 
+
+.. function:: project-name
+
+   Get the name of this project.
+
+   :signature: project-name *project* => *name*
+   :parameter project: An instance of :class:`<project-object>`
+   :return name: An instance of :drm:`<string>`
+
+.. generic-function:: project-proxy
+
+   Get the proxy of this project (usually an instance of :class:`<project>`)
+
+   :signature: project-proxy *project* => *proxy*
+   :parameter project: An instance of :class:`<project-object>`
+   :return proxy: An instance of :drm:`<object>`
+
+.. generic-function:: project-application
+
+   Get the application associated with this project
+
+   :signature: project-application *project* => *application*
+   :parameter project: An instance of :class:`<project-object>`
+   :return application: An instance of :class:`false-or(<application>) <<application>>`
+
+.. generic-function:: project-compiler-database
+
+   Get the compiler database associated with this project
+
+   :signature: project-compiler-database *project* => *compiler-database*
+   :parameter project: An instance of :class:`<project-object>`
+   :return compiler-database: An instance of :class:`false-or(<compiler-database>) <<compiler-database>>`
 
 Interactive Evaluation
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -1952,14 +2029,6 @@ Environment Protocols Module Classes
 .. class:: <class-object>
 
    :superclasses: :class:`<type-object>`
-
-
-
-
-
-
-
-
 
 
 .. class:: <component-object>
