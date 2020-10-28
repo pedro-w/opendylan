@@ -451,12 +451,12 @@ Environment Objects
 
    :signature: make-environment-object *class* ``#key`` *project* *library* *id* *application-object-proxy* *compiler-object-proxy* => *object*
 
-   :parameter class: a instance of :drm:`<class>`, a subclass of :class:<environment-object>
-   :key project: an instance of :class:`<project-object>`
-   :key library: an instance of :class:`false-or(<library-object>) <<library-object>>`
-   :key id: an instance of :class:`false-or(<id-or-integer>) <<id-or-integer>>`
-   :key application-object-proxy: an instance of :drm:`<object>`
-   :key compiler-object-proxy: an instance of :drm:`<object>`
+   :parameter class: a instance of :drm:`<class>`, a subclass of :class:`<environment-object>`
+   :parameter key project: an instance of :class:`<project-object>`
+   :parameter key library: an instance of :class:`false-or(<library-object>) <<library-object>>`
+   :parameter key id: an instance of :class:`false-or(<id-or-integer>) <<id-or-integer>>`
+   :parameter key application-object-proxy: an instance of :drm:`<object>`
+   :parameter key compiler-object-proxy: an instance of :drm:`<object>`
 
    :return object: an instance of :class:`<environment-object>`
 
@@ -474,7 +474,7 @@ Environment Objects
    :signature: parse-module-name *name* ``#key`` *library* => id
 
    :parameter name: an instance of :drm:`<string>`
-   :key library: an instance of :class:`false-or(<library-id>) <<library-id>>`
+   :parameter key library: an instance of :class:`false-or(<library-id>) <<library-id>>`
 
    :return id: an instance of :class:`false-or(<module-id>) <<module-id>>`
 
@@ -503,7 +503,7 @@ Environment Objects
 
    :parameter server: an instance of :class:`<server>`
    :parameter object: an instance of :class:`<environment-object>`
-   :key namespace: an instance of :class:`<object>`
+   :parameter key namespace: an instance of :class:`<object>`
    :value name: an instance of :drm:`<string>`
 
 Environment options
@@ -1766,16 +1766,147 @@ Compiler Databases
 
 - :class:`<compiler-database>`
 - :func:`ensure-database-proxy`
-- :func:`find-compiler-database-proxy`
-- :func:`compiler-database-proxy-id`
+- :gf:`find-compiler-database-proxy`
+- :gf:`compiler-database-proxy-id`
 - :func:`invalidate-compiler-database`
+
+.. class:: <compiler-database>
+   :open:
+   :abstract:
+   :primary:
+
+   :superclasses: :class:`<server>` :class:`<environment-object>`
+
+.. generic-function:: find-compiler-database-proxy
+   :open:
+
+   :signature: find-compiler-database-proxy *database*, *id* ``#key`` *imported?* => *compiler-proxy*
+   :parameter database: instance of :class:`<compiler-database>`
+   :parameter id: instance of :class:`<id>`
+   :parameter key imported?: instance of :drm:`<boolean>`
+   :return compiler-proxy: the proxy
+
+.. function:: ensure-database-proxy
+
+   Get an object's proxy, looking it up in the database if necessary
+
+   :signature: ensure-database-proxy *database*, *object* => *proxy*
+   :parameter database: instance of :class:`<compiler-database>`
+   :parameter object: instance of :class:`<compiler-object>`
+   :return proxy: the proxy    
 
 Project Objects
 ^^^^^^^^^^^^^^^
+
 - :class:`<project-object>`
 - :class:`<compilation-mode>`
 - :class:`<project-target-type>`
 - :class:`<project-interface-type>`
+- :func:`active-project`
+- :func:`active-project-setter`
+- :func:`project-name`
+- :func:`project-properties`
+- :func:`project-properties-setter`
+- :func:`project-proxy`
+- :func:`project-proxy-setter`
+- :func:`project-application`
+- :func:`project-application-setter`
+- :func:`project-compiler-database`
+- :func:`project-compiler-database-setter`
+- :func:`project-database-changed?`
+- :func:`project-sources-changed?`
+- :func:`project-opened-by-user?`
+- :func:`project-opened-by-user?-setter`
+- :func:`project-used-libraries`
+- :func:`project-used-projects`
+
+
+do-project-used-libraries,
+do-project-file-libraries,
+do-used-projects,
+edit-source-location,
+edit-source-record,
+edit-definition,
+open-project,
+find-project,
+create-new-user-project,
+open-project-from-file,
+create-exe-project-from-file,
+import-project-from-file,
+close-project,
+project-add-source-record,
+project-remove-source-record,
+project-reorder-source-records,
+save-project,
+save-project-database,
+open-projects,
+current-project, 
+current-project-setter,
+project-library,
+project-start-function-name, 
+project-start-function-name-setter,
+project-start-function,
+project-read-only?,
+project-can-be-built?,
+project-can-be-debugged?,
+project-compiled?,
+project-sources,
+project-canonical-sources,
+project-canonical-source-record,
+project-canonical-filename,
+project-other-sources,
+project-directory,
+project-filename,
+project-build-filename, 
+project-build-filename-setter,
+project-full-build-filename,
+project-debug-filename, 
+project-debug-filename-setter,
+project-debug-arguments, 
+project-debug-arguments-setter,
+project-debug-machine-address, 
+project-debug-machine-address-setter,
+project-debug-machine, 
+project-debug-machine-setter,
+project-debug-directory, 
+project-debug-directory-setter,
+project-build-directory,
+project-bin-directory,
+project-release-directory,
+project-server-path,
+project-compilation-mode, 
+project-compilation-mode-setter,
+project-compiler-back-end,
+project-compiler-back-end-setter,
+project-executable-name, 
+project-executable-name-setter,
+project-target-type, 
+project-target-type-setter,
+project-interface-type, 
+project-interface-type-setter,
+project-base-address, 
+project-base-address-setter,
+project-major-version, 
+project-major-version-setter,
+project-minor-version, 
+project-minor-version-setter,
+find-project-source-record,
+find-source-record-library,
+session-property,
+session-property-setter,
+source-record-top-level-forms,
+source-record-projects,
+source-record-colorization-info,
+open-project-compiler-database,
+parse-project-source,
+build-project,
+clean-project,
+link-project,
+note-user-project-opened
+
+Interactive Evaluation
+^^^^^^^^^^^^^^^^^^^^^^
+
 - :class:`<execution-id>`
 - :class:`<execution-info>`
 - :class:`<name-object>`
