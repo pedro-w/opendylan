@@ -42,6 +42,7 @@ are classified according to the sub-sections below.
 - :ref:`Non-Definition Source Forms`  
 - :ref:`Definition Objects`
 - :ref:`Compiler Databases`
+- :ref:`Project Objects`
 
 Server Objects
 ^^^^^^^^^^^^^^
@@ -1807,11 +1808,10 @@ Project Objects
 - :func:`project-name`
 - :gf:`project-proxy`
 - :gf:`project-application`
-
 - :gf:`project-compiler-database`
-- :func:`project-compiler-database-setter`
-- :func:`project-database-changed?`
-- :func:`project-sources-changed?`
+- :gf:`project-database-changed?`
+- :gf:`project-sources-changed?`
+
 - :func:`project-opened-by-user?`
 - :func:`project-opened-by-user?-setter`
 - :func:`project-used-libraries`
@@ -1980,6 +1980,22 @@ Project Objects
    :signature: project-compiler-database *project* => *compiler-database*
    :parameter project: An instance of :class:`<project-object>`
    :return compiler-database: An instance of :class:`false-or(<compiler-database>) <<compiler-database>>`
+
+.. generic-function:: project-database-changed?
+
+   Test if the project's database has changed.
+
+   :signature: project-database-changed? *project* => *yes?*
+   :parameter project: An instance of :class:`<project-object>`
+   :return yes?: An instance of :drm:`<boolean>`
+
+.. generic-function:: project-sources-changed?
+
+   Test if the project's sources have changed.
+
+   :signature: project-sources-changed? *project* => *yes?*
+   :parameter project: An instance of :class:`<project-object>`
+   :return yes?: An instance of :drm:`<boolean>`
 
 Interactive Evaluation
 ^^^^^^^^^^^^^^^^^^^^^^
