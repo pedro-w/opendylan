@@ -1997,6 +1997,17 @@ Project Objects
    :parameter project: An instance of :class:`<project-object>`
    :return yes?: An instance of :drm:`<boolean>`
 
+.. generic-function:: do-project-file-libraries
+
+   Apply a function to source records associated with a file. The signature
+   of the method is "function *library* *source-record* => ()"
+   where ``library`` is an instance of :class:`<library-object>` and ``source-record`` is an instance of :class:`<source-record>`
+
+   :signature: do-project-file-libraries *function* *server* *file* => ()
+   :parameter function: A callback function.
+   :parameter server: An instance of :class:`<server>`
+   :parameter file: an instance of :class:`<file-locator>`
+
 Interactive Evaluation
 ^^^^^^^^^^^^^^^^^^^^^^
 
