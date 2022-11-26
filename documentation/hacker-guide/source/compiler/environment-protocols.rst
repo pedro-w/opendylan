@@ -39,7 +39,7 @@ are classified according to the sub-sections below.
 - :ref:`Collection Objects`
 - :ref:`Source Forms`
 - :ref:`Macro Calls`
-- :ref:`Non-Definition Source Forms`  
+- :ref:`Non-Definition Source Forms`
 - :ref:`Definition Objects`
 - :ref:`Compiler Databases`
 - :ref:`Project Objects`
@@ -1444,7 +1444,7 @@ Source Forms
    :param #key modules:
    :param #key libraries:
    :param #key client:
-	       
+
 .. generic-function:: do-used-definitions
    :open:
 
@@ -1455,7 +1455,7 @@ Source Forms
    :param #key modules:
    :param #key libraries:
    :param #key client:
-	       
+
 .. generic-function:: source-form-has-clients?
    :open:
 
@@ -1479,24 +1479,24 @@ Source Forms
    :return uses-definitions?: an instance of :drm:`<boolean>`
 
 .. function:: source-form-used-definitions
-	      
+
    :signature: source-form-used-definitions *server*, *object*, ``#key`` *modules* *libraries* *client* => *used-definitions*
    :param server: an instance of :class:`<server>`
    :param object: an instance of :class:`<source-form-object>`
    :param #key modules:
    :param #key libraries:
    :param #key client:
-   :return used-definitions: an instance of :drm:`<sequence>`	      
+   :return used-definitions: an instance of :drm:`<sequence>`
 
 .. function:: source-form-clients
-	      
+
    :signature: source-form-clients *server*, *object*, ``#key`` *modules* *libraries* *client* => *clients*
    :param server: an instance of :class:`<server>`
    :param object: an instance of :class:`<source-form-object>`
    :param #key modules:
    :param #key libraries:
    :param #key client:
-   :return clients: an instance of :drm:`<sequence>`	      
+   :return clients: an instance of :drm:`<sequence>`
 
 Macro Calls
 ^^^^^^^^^^^
@@ -1524,7 +1524,7 @@ Macro Calls
    :param server: an instance of :class:`<server>`
    :param object: an instance of :class:`<macro-call-object>`
    :return source-forms: an instance of :drm:`<sequence>`
-			 
+
 Non-definition source forms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - :class:`<simple-macro-call-object>`
@@ -1585,7 +1585,7 @@ Definition Objects
    :parameter name: an instance of :drm:`<string>`
    :parameter #key imported?: an instance of :drm:`<boolean>`, default ``#t``
    :return definition: an instance of :class:`false-or(<definition-object>) <<definition-object>>`
-      
+
 Breakpoints
 ^^^^^^^^^^^
 
@@ -1794,7 +1794,15 @@ Compiler Databases
    :signature: ensure-database-proxy *database*, *object* => *proxy*
    :parameter database: instance of :class:`<compiler-database>`
    :parameter object: instance of :class:`<compiler-object>`
-   :return proxy: the proxy    
+   :return proxy: the proxy
+
+.. generic-function:: compiler-database-proxy-id
+   :open:
+
+   :signature: compiler-database-proxy-id *database* *proxy* => *id*
+   :parameter database: instance of :class:`<compiler-database>`
+   :parameter proxy: instance of :drm:`<object>`
+   :return id: instance of :class:`false-or(<id>) <<id>>`
 
 Project Objects
 ^^^^^^^^^^^^^^^
@@ -1920,7 +1928,7 @@ Project Objects
    :slot source-location-breakpoints: An instance of :drm:`<collection>`
    :slot project-properties: An instance of :drm:`<list>`
    :slot project-profile-state: An instance of :class:`<profile-state>`
-   
+
 .. constant:: <compilation-mode>
 
    One of ``#"loose"``, ``#"tight"``
@@ -1938,16 +1946,16 @@ Project Objects
    Get the currently active project.
 
    :signature: active-project () => *project*
-   :return project: An instance of :class:`false-or(<project-object>) <<project-object>>` 
+   :return project: An instance of :class:`false-or(<project-object>) <<project-object>>`
 
 .. function:: active-project-setter
 
-   Set the currently active project. Broadcasts a :class:`<project-now-active-message>` or 
+   Set the currently active project. Broadcasts a :class:`<project-now-active-message>` or
    a :class:`<no-active-project>` message.
 
    :signature: active-project-setter *project* => *project*
    :parameter project: The project to set, an instance of :class:`false-or(<project-object>) <<project-object>>`
-   :return project: An instance of :class:`false-or(<project-object>) <<project-object>>` 
+   :return project: An instance of :class:`false-or(<project-object>) <<project-object>>`
 
 .. function:: project-name
 
@@ -2013,18 +2021,50 @@ Interactive Evaluation
 
 - :class:`<execution-id>`
 - :class:`<execution-info>`
+
+Name Objects
+^^^^^^^^^^^^
+
 - :class:`<name-object>`
 - :class:`<module-name-object>`
 - :class:`<binding-name-object>`
+
+Namespace Objects
+^^^^^^^^^^^^^^^^^
+
 - :class:`<namespace-object>`
+
+Library Objects
+^^^^^^^^^^^^^^^
+
 - :class:`<library-object>`
+
+Module Objects
+~~~~~~~~~~~~~~
+
 - :class:`<module-object>`
+
+Macros
+^^^^^^
+
 - :class:`<macro-object>`
+
+Variable Objects
+^^^^^^^^^^^^^^^^
+
 - :class:`<variable-object>`
 - :class:`<module-variable-object>`
 - :class:`<global-variable-object>`
 - :class:`<thread-variable-object>`
+
+Constant Object
+^^^^^^^^^^^^^^^
+
 - :class:`<constant-object>`
+
+Function Object
+^^^^^^^^^^^^^^^
+
 - :class:`<function-object>`
 - :class:`<foreign-function-object>`
 - :class:`<dylan-function-object>`
@@ -2037,15 +2077,53 @@ Interactive Evaluation
 - :class:`<parameters>`
 - :class:`<optional-parameter>`
 - :class:`<optional-parameters>`
+
+Domains
+^^^^^^^
+
 - :class:`<domain-object>`
+
+Type Objects
+^^^^^^^^^^^^
+
 - :class:`<type-object>`
+
+Singleton Objects
+^^^^^^^^^^^^^^^^^
+
 - :class:`<singleton-object>`
+
+Classes
+^^^^^^^
+
 - :class:`<class-object>`
+
+Slots
+^^^^^
+
 - :class:`<slot-object>`
+
+Local Variable Objects
+^^^^^^^^^^^^^^^^^^^^^^
+
 - :class:`<local-variable-object>`
+
+Stack Frame Objects
+^^^^^^^^^^^^^^^^^^^
 - :class:`<stack-frame-object>`
+
+Compiler Warnings
+^^^^^^^^^^^^^^^^^
+
 - :class:`<warning-object>`
+
+Condition Objects
+^^^^^^^^^^^^^^^^^
 - :class:`<condition-object>`
+
+DUIM Objects
+^^^^^^^^^^^^
+
 - :class:`<duim-object>`
 - :class:`<duim-frame-manager>`
 
@@ -2087,6 +2165,11 @@ Environment Protocols Module Classes
    :superclasses: :class:`<application-object>`
 
 
+..class:: <generic-function-object>
+
+  :superclasses: :class:`<dylan-function-object>`
+
+		  
 
 Environment Protocol Module Conditions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
